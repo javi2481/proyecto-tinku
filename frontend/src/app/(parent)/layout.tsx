@@ -8,6 +8,8 @@ export default async function ParentLayout({ children }: { children: React.React
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
+  const role = (user.user_metadata as { role?: string } | undefined)?.role;
+  if (role === 'student') redirect('/islas');
 
   const { data: profile } = await supabase
     .from('profiles')

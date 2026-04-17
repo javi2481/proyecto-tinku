@@ -10,6 +10,26 @@ exports.id = "vendor-chunks/next";
 exports.ids = ["vendor-chunks/next"];
 exports.modules = {
 
+/***/ "(rsc)/./node_modules/next/font/google/target.css?{\"path\":\"src/app/layout.tsx\",\"import\":\"Andika\",\"arguments\":[{\"subsets\":[\"latin\"],\"weight\":[\"400\",\"700\"],\"variable\":\"--font-andika\",\"display\":\"swap\"}],\"variableName\":\"andika\"}":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/next/font/google/target.css?{"path":"src/app/layout.tsx","import":"Andika","arguments":[{"subsets":["latin"],"weight":["400","700"],"variable":"--font-andika","display":"swap"}],"variableName":"andika"} ***!
+  \*********************************************************************************************************************************************************************************************************************************/
+/***/ ((module) => {
+
+eval("// Exports\nmodule.exports = {\n\t\"style\": {\"fontFamily\":\"'__Andika_1bea73', '__Andika_Fallback_1bea73'\",\"fontStyle\":\"normal\"},\n\t\"className\": \"__className_1bea73\",\n\t\"variable\": \"__variable_1bea73\"\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9ub2RlX21vZHVsZXMvbmV4dC9mb250L2dvb2dsZS90YXJnZXQuY3NzP3tcInBhdGhcIjpcInNyYy9hcHAvbGF5b3V0LnRzeFwiLFwiaW1wb3J0XCI6XCJBbmRpa2FcIixcImFyZ3VtZW50c1wiOlt7XCJzdWJzZXRzXCI6W1wibGF0aW5cIl0sXCJ3ZWlnaHRcIjpbXCI0MDBcIixcIjcwMFwiXSxcInZhcmlhYmxlXCI6XCItLWZvbnQtYW5kaWthXCIsXCJkaXNwbGF5XCI6XCJzd2FwXCJ9XSxcInZhcmlhYmxlTmFtZVwiOlwiYW5kaWthXCJ9IiwibWFwcGluZ3MiOiJBQUFBO0FBQ0E7QUFDQSxXQUFXLGtGQUFrRjtBQUM3RjtBQUNBO0FBQ0EiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly90aW5rdS8uL25vZGVfbW9kdWxlcy9uZXh0L2ZvbnQvZ29vZ2xlL3RhcmdldC5jc3M/MjlhOCJdLCJzb3VyY2VzQ29udGVudCI6WyIvLyBFeHBvcnRzXG5tb2R1bGUuZXhwb3J0cyA9IHtcblx0XCJzdHlsZVwiOiB7XCJmb250RmFtaWx5XCI6XCInX19BbmRpa2FfMWJlYTczJywgJ19fQW5kaWthX0ZhbGxiYWNrXzFiZWE3MydcIixcImZvbnRTdHlsZVwiOlwibm9ybWFsXCJ9LFxuXHRcImNsYXNzTmFtZVwiOiBcIl9fY2xhc3NOYW1lXzFiZWE3M1wiLFxuXHRcInZhcmlhYmxlXCI6IFwiX192YXJpYWJsZV8xYmVhNzNcIlxufTtcbiJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///(rsc)/./node_modules/next/font/google/target.css?{\"path\":\"src/app/layout.tsx\",\"import\":\"Andika\",\"arguments\":[{\"subsets\":[\"latin\"],\"weight\":[\"400\",\"700\"],\"variable\":\"--font-andika\",\"display\":\"swap\"}],\"variableName\":\"andika\"}\n");
+
+/***/ }),
+
+/***/ "(rsc)/./node_modules/next/font/google/target.css?{\"path\":\"src/app/layout.tsx\",\"import\":\"Inter\",\"arguments\":[{\"subsets\":[\"latin\"],\"variable\":\"--font-parent\",\"display\":\"swap\"}],\"variableName\":\"inter\"}":
+/*!********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/next/font/google/target.css?{"path":"src/app/layout.tsx","import":"Inter","arguments":[{"subsets":["latin"],"variable":"--font-parent","display":"swap"}],"variableName":"inter"} ***!
+  \********************************************************************************************************************************************************************************************************/
+/***/ ((module) => {
+
+eval("// Exports\nmodule.exports = {\n\t\"style\": {\"fontFamily\":\"'__Inter_f367f3', '__Inter_Fallback_f367f3'\",\"fontStyle\":\"normal\"},\n\t\"className\": \"__className_f367f3\",\n\t\"variable\": \"__variable_f367f3\"\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9ub2RlX21vZHVsZXMvbmV4dC9mb250L2dvb2dsZS90YXJnZXQuY3NzP3tcInBhdGhcIjpcInNyYy9hcHAvbGF5b3V0LnRzeFwiLFwiaW1wb3J0XCI6XCJJbnRlclwiLFwiYXJndW1lbnRzXCI6W3tcInN1YnNldHNcIjpbXCJsYXRpblwiXSxcInZhcmlhYmxlXCI6XCItLWZvbnQtcGFyZW50XCIsXCJkaXNwbGF5XCI6XCJzd2FwXCJ9XSxcInZhcmlhYmxlTmFtZVwiOlwiaW50ZXJcIn0iLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBLFdBQVcsZ0ZBQWdGO0FBQzNGO0FBQ0E7QUFDQSIsInNvdXJjZXMiOlsid2VicGFjazovL3Rpbmt1Ly4vbm9kZV9tb2R1bGVzL25leHQvZm9udC9nb29nbGUvdGFyZ2V0LmNzcz9hYWMxIl0sInNvdXJjZXNDb250ZW50IjpbIi8vIEV4cG9ydHNcbm1vZHVsZS5leHBvcnRzID0ge1xuXHRcInN0eWxlXCI6IHtcImZvbnRGYW1pbHlcIjpcIidfX0ludGVyX2YzNjdmMycsICdfX0ludGVyX0ZhbGxiYWNrX2YzNjdmMydcIixcImZvbnRTdHlsZVwiOlwibm9ybWFsXCJ9LFxuXHRcImNsYXNzTmFtZVwiOiBcIl9fY2xhc3NOYW1lX2YzNjdmM1wiLFxuXHRcInZhcmlhYmxlXCI6IFwiX192YXJpYWJsZV9mMzY3ZjNcIlxufTtcbiJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///(rsc)/./node_modules/next/font/google/target.css?{\"path\":\"src/app/layout.tsx\",\"import\":\"Inter\",\"arguments\":[{\"subsets\":[\"latin\"],\"variable\":\"--font-parent\",\"display\":\"swap\"}],\"variableName\":\"inter\"}\n");
+
+/***/ }),
+
 /***/ "(ssr)/./node_modules/next/dist/api/link.js":
 /*!********************************************!*\
   !*** ./node_modules/next/dist/api/link.js ***!

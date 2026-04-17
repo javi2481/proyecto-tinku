@@ -3,9 +3,11 @@ import { createServerClient } from '@supabase/ssr';
 
 /**
  * Middleware: refresca cookies de sesión Supabase en cada request
- * y protege rutas privadas.
+ * y rutea según role (parent vs student) en el JWT metadata.
  *
- * Patrón canónico @supabase/ssr 0.5+: getAll/setAll.
+ * role se setea al crear el auth.users:
+ *   - parent: via admin.createUser({ user_metadata: { role: 'parent' } }) en signup
+ *   - student: via signInAnonymously({ options: { data: { role: 'student' } } })
  */
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -31,34 +33,73 @@ export async function middleware(request: NextRequest) {
     },
   );
 
-  // IMPORTANTE: getUser() revalida el JWT contra Supabase (no confiar en getSession solo).
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
+  const role = (user?.user_metadata as { role?: string } | undefined)?.role;
 
-  // Rutas protegidas (parent)
   const isParentArea =
-    pathname.startsWith('/dashboard') ||
-    pathname.startsWith('/students') ||
-    pathname.startsWith('/account');
+    pathname === '/dashboard' ||
+    pathname.startsWith('/dashboard/') ||
+    pathname === '/students' ||
+    pathname.startsWith('/students/') ||
+    pathname === '/account' ||
+    pathname.startsWith('/account/');
 
-  const isAuthPage =
-    pathname === '/signup' ||
-    pathname === '/login';
+  const isStudentArea =
+    pathname === '/islas' ||
+    pathname.startsWith('/islas/') ||
+    pathname === '/isla' ||
+    pathname.startsWith('/isla/');
 
-  if (isParentArea && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/login';
-    url.searchParams.set('next', pathname);
-    return NextResponse.redirect(url);
+  const isParentAuth = pathname === '/signup' || pathname === '/login';
+  const isStudentAuth = pathname === '/entrar';
+
+  // Parent area
+  if (isParentArea) {
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/login';
+      url.searchParams.set('next', pathname);
+      return NextResponse.redirect(url);
+    }
+    if (role === 'student') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/islas';
+      url.search = '';
+      return NextResponse.redirect(url);
+    }
   }
 
-  if (isAuthPage && user) {
+  // Student area
+  if (isStudentArea) {
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/entrar';
+      return NextResponse.redirect(url);
+    }
+    if (role !== 'student') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/dashboard';
+      url.search = '';
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // Parent auth pages: si hay sesión parent, enviar al dashboard
+  if (isParentAuth && user && role !== 'student') {
     const url = request.nextUrl.clone();
     url.pathname = '/dashboard';
     url.search = '';
+    return NextResponse.redirect(url);
+  }
+
+  // Student auth page: si hay sesión student, enviar a islas
+  if (isStudentAuth && user && role === 'student') {
+    const url = request.nextUrl.clone();
+    url.pathname = '/islas';
     return NextResponse.redirect(url);
   }
 
@@ -67,10 +108,15 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Excluye assets estáticos y rutas internas de Next.
-     * Incluye todas las páginas públicas y privadas.
-     */
-    '/((?!_next/static|_next/image|favicon.ico|fonts/|badges/|images/).*)',
+    '/',
+    '/signup',
+    '/login',
+    '/verify-email',
+    '/entrar',
+    '/dashboard/:path*',
+    '/students/:path*',
+    '/account/:path*',
+    '/islas/:path*',
+    '/isla/:path*',
   ],
 };

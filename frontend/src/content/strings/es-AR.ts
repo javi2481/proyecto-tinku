@@ -132,6 +132,44 @@ export const strings = {
       },
     },
   },
+
+  student: {
+    entrar: {
+      title: '¡Hola! Entrá a Tinkú',
+      subtitle: 'Escribí tu código para empezar.',
+      codeLabel: 'Tu código',
+      codePlaceholder: 'KX3P9M',
+      help: '¿No te anda? Pedile el código a tu mamá, papá o tutor.',
+      submit: '¡Entrar!',
+      submitting: 'Entrando…',
+      errors: {
+        invalidFormat: 'El código tiene 6 letras y números.',
+        invalidCode: 'Mmm, ese código no funciona. Pedile ayuda a un adulto.',
+        rateLimited: 'Probaste muchas veces. Esperá un ratito y volvé a intentar.',
+        generic: '¡Uy! Algo no salió bien. Probá de nuevo en un momento.',
+      },
+    },
+    islas: {
+      title: 'Las Islas del Saber',
+      subtitle: '¿A qué isla querés ir hoy, {name}?',
+      comingSoon: 'Próximamente',
+      salir: 'Salir',
+      islands: {
+        math: { name: 'Isla de los Números' },
+        language: { name: 'Isla de las Palabras' },
+        science: { name: 'Isla de la Naturaleza' },
+        social: { name: 'Isla del Tiempo' },
+        tech: { name: 'Isla de los Inventos' },
+      },
+    },
+    islaNumeros: {
+      title: 'Isla de los Números',
+      subtitle: 'Acá vas a aprender Matemática como en una aventura.',
+      comingSoonTitle: '¡Muy pronto!',
+      comingSoonBody: 'Los primeros ejercicios están llegando. Volvé en un ratito.',
+      back: '← Volver a las islas',
+    },
+  },
 } as const;
 
 export type Strings = typeof strings;
