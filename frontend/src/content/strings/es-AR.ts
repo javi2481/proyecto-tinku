@@ -25,6 +25,11 @@ export const strings = {
   },
 
   auth: {
+    common: {
+      continueGoogle: 'Continuar con Google',
+      signupGoogle: 'Registrarse con Google',
+      or: 'o',
+    },
     signup: {
       title: 'Creá tu cuenta de padre/madre',
       subtitle: 'Necesitamos tus datos para configurar la cuenta. Los datos de tu hijo/a los vamos a pedir después, con tu consentimiento explícito.',

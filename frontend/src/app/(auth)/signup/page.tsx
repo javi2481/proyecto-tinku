@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { strings } from '@/content/strings/es-AR';
 import { SignupForm } from './SignupForm';
+import { GoogleAuthButton } from '@/components/auth/GoogleAuthButton';
 
 export default function SignupPage() {
   return (
@@ -9,6 +10,14 @@ export default function SignupPage() {
         <h1 className="text-2xl font-semibold text-tinku-ink">{strings.auth.signup.title}</h1>
         <p className="text-sm text-tinku-ink/70">{strings.auth.signup.subtitle}</p>
       </header>
+
+      <GoogleAuthButton label={strings.auth.common.signupGoogle} next="/dashboard" />
+
+      <div className="relative flex items-center gap-3 py-1">
+        <span className="flex-1 border-t border-tinku-ink/10" />
+        <span className="text-xs text-tinku-ink/50 uppercase tracking-wide">{strings.auth.common.or}</span>
+        <span className="flex-1 border-t border-tinku-ink/10" />
+      </div>
 
       <SignupForm />
 
