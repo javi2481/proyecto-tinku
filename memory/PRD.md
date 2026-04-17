@@ -216,41 +216,76 @@ Tutor IA Ari (Ola 4), MercadoPago real, portal docente, push, offline avanzado, 
 | Resta con reagrupamiento | medium | ¿Cuánto es 52 - 28? | 24 |
 | Resta con reagrupamiento | hard | ¿Cuánto es 70 - 34? | 36 |
 
-### ⏳ Fase 7 — Auditoría + PWA + pulido (próxima, Fase 6 quedó mergeada en esta)
-### ⏳ Fase 4 — Auth del alumno (anonymous sign-in + login_code)
-### ⏳ Fase 5 — Experiencia del alumno (islas → ejercicio)
-### ⏳ Fase 6 — Motor adaptativo heurístico
-### ⏳ Fase 7 — Auditoría + PWA básico + pulido UX infantil
+### ✅ Fase 6 — Gamificación (celebraciones + badges) (completada 2026-04)
+
+**Construido:**
+- `src/components/celebration/CelebrationModal.tsx` — modal reutilizable con 3 variantes (`xp` / `badge` / `mastered`). Features:
+  - Confetti con `canvas-confetti` (ráfagas escalonadas para `mastered`).
+  - Sonido opcional vía Web Audio API (sin assets); toggle 🔊/🔈 persistido en `localStorage['tinku-sound']`.
+  - Cumple UX infantil: celebración ≥1.5s antes de habilitar el cierre (`MIN_DURATION_MS=1500`). Texto placeholder "Uff, qué emoción…" mientras está deshabilitado.
+  - `role="dialog"` + `aria-modal` + cierre por ESC/Enter/click-fuera + `prefers-reduced-motion` respetado.
+- `PracticeClient.tsx` → cola de celebraciones grandes: si una respuesta gatilla `justMastered` o `newBadges`, las celebraciones se encolan y muestran secuencialmente (mastered → badge por cada nuevo).
+- `(student)/mis-logros/page.tsx` — grid con medallas ganadas (borde verde + fecha) y para desbloquear (grayscale + lock + recompensa XP). Contador "Ganaste X de Y medallas".
+- `(student)/islas/page.tsx` → botón "Mis medallas" en el header del alumno.
+- `src/content/strings/es-AR.ts` → nuevas keys `student.celebration` + `student.logros.navLink`.
+
+**Testing (Playwright directo + testing_agent_v3 iteration_4.json):**
+- E2E verificado con screenshots: seed mastery a 0.83 → login 74RTPM → respuesta correcta a "¿qué valor tiene el 3 en 538?" (30) → modal "¡Dominaste este concepto!" con confetti + +20 XP → click close → modal "¡Conseguiste una medalla!" para concept_mastered badge.
+- Mis Logros verifica 2/5 medallas ganadas después del flow (Primer paso + Dominé un concepto).
+- Sound toggle persistido en localStorage.
+
+**Helper de test:** `frontend/scripts/seed-mastery-near-threshold.mjs <login_code> <concept_code> <p_known>` — sube el mastery del alumno al borde del umbral para que 1 correct_first dispare mastery sin necesidad de 12 aciertos consecutivos.
+
+### ✅ Fase 7 — Auditoría + PWA + anonimización (completada 2026-04)
+
+**Auditoría centralizada:**
+- `src/lib/audit/log.ts` — helper `logDataAccess({ studentId, accessType, accessTarget, metadata, accessorId, accessorAuthUid })`. Falla silenciosamente a `app_logs` si `data_access_log` insert falla. Extrae IP + user-agent de headers automáticamente.
+- Integrado en: `submitAttemptAction` (attempts.submit con xp/outcome/mastered/badges), `updateStudentAction`, `regenerateLoginCodeAction`, `cancelDeleteStudentAction`, `studentSignOutAction`. Actions preexistentes (create/delete/login) conservan sus inserts inline (ya eran explícitos y auditados desde Fase 3).
+
+**PWA:**
+- `public/manifest.webmanifest` — name, short_name "Tinkú", start_url `/islas`, display standalone, theme_color `#2F7A8C`, icons SVG `any` + `maskable`.
+- `public/icons/tinku.svg` + `tinku-maskable.svg` — monograma "T" con isla/palmera/estrella (tema Tinkú).
+- `public/sw.js` — cache-first para `/_next/static`, fonts, iconos; network-first para páginas con fallback offline HTML embebido. `/api/*` y `/auth/*` nunca cacheados.
+- `src/components/pwa/RegisterSW.tsx` — cliente que registra `/sw.js` solo en prod (o con `NEXT_PUBLIC_ENABLE_SW=1` en dev).
+- `src/app/layout.tsx` → metadata.manifest + icons + appleWebApp + viewport.themeColor + `<RegisterSW />`.
+
+**Anonimización (Derecho al olvido):**
+- `src/app/webhooks/cron/anonymize/route.ts` — endpoint POST protegido con `Authorization: Bearer ${CRON_SECRET}`. Busca `students` con `deletion_requested_at >= NOW() - 30d`, anonimiza PII (first_name='Anónimo', login_code placeholder, auth_user_id null), marca `deleted_at`, borra auth anónimo, inserta `parental_consents` event='erased' + audit log. No toca attempts/sessions/concept_mastery (histórico agregado queda anónimo).
+- GET devuelve health check. Sin header devuelve 401.
+- Ruta está bajo `/webhooks/*` (no `/api/*`) para saltear el ingress que redirige `/api/*` a FastAPI.
+
+**Resend real (email):**
+- `src/lib/email/stub.ts` reescrito — ahora usa `resend` SDK si hay `RESEND_API_KEY`. Si Resend falla o no hay key, cae a logger + stdout (stub legacy). Agregado template HTML rioplatense con CTA button inline (colores Tinkú).
+- Callers (`signupAction`, `resendVerifyAction`) sin cambios — API retrocompatible.
+- Sandbox: envíos a `delivered@resend.dev` funcionan; otras direcciones fallan con 403 hasta que Javier verifique dominio propio. Fallback a stub garantiza que signup/verify no se bloquean.
+
+**Testing (iteration_4.json, 95% success, 0 bugs):**
+- 20 test cases PASS: parent login, student login, islas, Mis Logros (2/5 medallas + grayscale locked), PWA manifest/sw.js/icons HTTP 200, cron endpoint 401/200/GET, audit_access_log rows para login + attempts, Resend integration, localStorage sound pref, regresión iter 1-3.
+- CelebrationModal E2E verificado por el main agent con Playwright directo antes del testing agent (screenshots confirmaron mastered modal + badge modal + confetti).
+- Sin issues críticos ni minor.
 
 ---
 
 ## Backlog prioritizado (P0 / P1 / P2)
 
-### P0 — Bloqueantes Ola 1
-- [ ] Generar `types/database.ts` con Supabase CLI (o supabase-js codegen via HTTP).
-- [ ] Fundacional v3 (Javier adjuntará reemplazo de v2).
-- [ ] Fase 2: signup del padre + creación de `profiles` + `subscriptions` (free).
-- [ ] Fase 2: doble opt-in por email (stub con log a `app_logs` en Ola 1, Resend real después).
-- [ ] Fase 3: flujo de consentimiento parental con versionado de texto legal en `/content/legal/consent-v1.md`.
-- [ ] Fase 4: anonymous sign-in + `students.auth_user_id` vinculado.
-- [ ] Fase 5: `ExerciseShell` + `MultipleChoice` + `NumericInput` con tap targets infantiles.
-- [ ] Fase 6: heurística de selección + actualización de `concept_mastery`.
-- [ ] Seed de ~20 ejercicios math 1°-3° aprobados.
+### P0 — Bloqueantes Ola 1 (todo completo ✅)
+- Todo cerrado. Fases 0 a 7 completas. Resend real integrado.
 
 ### P1 — Calidad Ola 1
-- [ ] Rate-limit en `/entrar` (IP + código).
-- [ ] Logger estructurado → `app_logs`.
-- [ ] Middleware Next.js para proteger rutas `(parent)` y `(student)`.
-- [ ] Page 404/500 rioplatense con feedback infantil.
+- [ ] Verificar dominio propio en Resend (ej: tinku.app) para enviar emails a cualquier destinatario (hoy solo sandbox → `delivered@resend.dev`).
+- [ ] Agendar el cron `/webhooks/cron/anonymize` en un scheduler real (Supabase Scheduled Function, Vercel Cron, o GitHub Actions). Hoy está manual.
+- [ ] Seed de ejercicios: ampliar a 20+ por concepto para evitar que reintentos marquen `correct_retry` demasiado seguido (notado por el testing agent).
+- [ ] Exercise type `numeric_input` además de MCQ (hoy solo MCQ en seed).
+- [ ] Ícono PWA PNG fallback (hoy solo SVG) para mejor soporte en iOS antiguos.
+- [ ] PostHog / Sentry reales (hoy stub en app_logs).
 
 ### P2 — Ola 2+
 - [ ] Migrar a H5P si surgen tipos de ejercicio que lo justifiquen.
-- [ ] Resend real para emails.
-- [ ] Sentry + PostHog.
-- [ ] MercadoPago.
+- [ ] MercadoPago para suscripción Premium.
 - [ ] Isla de las Palabras (Lengua).
 - [ ] Portal docente.
-- [ ] Reglas de concept_links pobladas.
+- [ ] Reglas de concept_links pobladas (grafo de prerequisites).
+- [ ] WhatsApp/SMS double opt-in para consentimiento.
 
 ---
 
