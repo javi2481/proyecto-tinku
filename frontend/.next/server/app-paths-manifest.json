@@ -1,5 +1,6 @@
 {
-  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/page": "app/page.js",
   "/(parent)/dashboard/page": "app/(parent)/dashboard/page.js",
-  "/(parent)/review-exercises/page": "app/(parent)/review-exercises/page.js"
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/(auth)/signup/page": "app/(auth)/signup/page.js"
 }
