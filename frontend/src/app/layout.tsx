@@ -28,8 +28,14 @@ export const metadata: Metadata = {
     statusBarStyle: 'default',
   },
   icons: {
-    icon: [{ url: '/icons/tinku.svg', type: 'image/svg+xml' }],
-    apple: [{ url: '/icons/tinku.svg', type: 'image/svg+xml' }],
+    icon: [
+      { url: '/icons/tinku-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/tinku-512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/icons/tinku.svg', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/icons/tinku-apple-touch.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
 };
 

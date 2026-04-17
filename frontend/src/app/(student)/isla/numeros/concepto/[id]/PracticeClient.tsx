@@ -55,9 +55,14 @@ export function PracticeClient({
   const options = (exercise.content as { options?: string[] }).options ?? [];
   const hints = (exercise.hints as Array<{ text: string }>) ?? [];
   const firstHint = hints[0]?.text;
+  const isNumeric = exercise.exercise_type === 'numeric_input';
+  const numericPlaceholder =
+    (exercise.content as { placeholder?: string }).placeholder ?? '0';
 
   const onSubmit = () => {
     if (!selected) return;
+    // Para numeric_input, no aceptar input vacío ni solo guión
+    if (isNumeric && !/^-?\d+$/.test(selected)) return;
     const timeSpent = Math.max(1, Math.round((Date.now() - startedAtRef.current) / 1000));
     startTransition(async () => {
       const res = await submitAttemptAction({
@@ -184,32 +189,62 @@ export function PracticeClient({
             {exercise.prompt_es}
           </p>
 
-          <div data-testid="exercise-options" className="grid grid-cols-2 gap-3">
-            {options.map((opt, idx) => {
-              const isSelected = selected === opt;
-              const disabled = Boolean(feedback) || isPending;
-              return (
-                <button
-                  key={`${exercise.id}-${idx}`}
-                  type="button"
-                  onClick={() => !disabled && setSelected(opt)}
-                  disabled={disabled}
-                  data-testid={`option-${idx}`}
-                  className={cn(
-                    'exercise-target rounded-2xl h-16 text-2xl font-semibold border-2 transition-all',
-                    isSelected
-                      ? 'border-tinku-sea bg-tinku-sea/10 text-tinku-ink scale-[1.02]'
-                      : 'border-tinku-ink/10 bg-tinku-mist/50 text-tinku-ink hover:border-tinku-sea/50',
-                    feedback && feedback.correct && isSelected && 'border-tinku-leaf bg-tinku-leaf/15',
-                    feedback && !feedback.correct && isSelected && 'border-tinku-warn bg-tinku-warn/10',
-                    disabled && 'cursor-not-allowed',
-                  )}
-                >
-                  {opt}
-                </button>
-              );
-            })}
-          </div>
+          {isNumeric ? (
+            <div data-testid="exercise-numeric" className="space-y-3">
+              <label htmlFor="numeric-answer" className="block text-sm text-tinku-ink/70 font-medium">
+                Escribí el número
+              </label>
+              <input
+                id="numeric-answer"
+                type="text"
+                inputMode="numeric"
+                pattern="-?[0-9]*"
+                autoComplete="off"
+                data-testid="numeric-input"
+                value={selected ?? ''}
+                placeholder={numericPlaceholder}
+                onChange={(e) => {
+                  if (feedback || isPending) return;
+                  const clean = e.target.value.replace(/[^0-9-]/g, '');
+                  setSelected(clean);
+                }}
+                disabled={Boolean(feedback) || isPending}
+                className={cn(
+                  'exercise-target w-full h-20 rounded-2xl border-2 bg-tinku-mist/40 text-tinku-ink text-center text-5xl font-bold tracking-wider transition-all',
+                  'border-tinku-ink/10 focus:outline-none focus:border-tinku-sea',
+                  feedback && feedback.correct && 'border-tinku-leaf bg-tinku-leaf/15',
+                  feedback && !feedback.correct && 'border-tinku-warn bg-tinku-warn/10',
+                )}
+              />
+            </div>
+          ) : (
+            <div data-testid="exercise-options" className="grid grid-cols-2 gap-3">
+              {options.map((opt, idx) => {
+                const isSelected = selected === opt;
+                const disabled = Boolean(feedback) || isPending;
+                return (
+                  <button
+                    key={`${exercise.id}-${idx}`}
+                    type="button"
+                    onClick={() => !disabled && setSelected(opt)}
+                    disabled={disabled}
+                    data-testid={`option-${idx}`}
+                    className={cn(
+                      'exercise-target rounded-2xl h-16 text-2xl font-semibold border-2 transition-all',
+                      isSelected
+                        ? 'border-tinku-sea bg-tinku-sea/10 text-tinku-ink scale-[1.02]'
+                        : 'border-tinku-ink/10 bg-tinku-mist/50 text-tinku-ink hover:border-tinku-sea/50',
+                      feedback && feedback.correct && isSelected && 'border-tinku-leaf bg-tinku-leaf/15',
+                      feedback && !feedback.correct && isSelected && 'border-tinku-warn bg-tinku-warn/10',
+                      disabled && 'cursor-not-allowed',
+                    )}
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           {firstHint && !feedback && (
             <div>

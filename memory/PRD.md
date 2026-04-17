@@ -220,6 +220,43 @@ Tutor IA Ari (Ola 4), MercadoPago real, portal docente, push, offline avanzado, 
 
 **Construido:**
 - `src/components/celebration/CelebrationModal.tsx` — modal reutilizable con 3 variantes (`xp` / `badge` / `mastered`). Features:
+
+### ✅ Sprint P1 — 2026-04-17 (cron scheduler + seed expandido + numeric_input + PNG icons + fix SA ingress)
+
+**Cron scheduler real:**
+- `.github/workflows/anonymize-cron.yml` — corre diario a 03:15 UTC, hace `POST /webhooks/cron/anonymize` con `Authorization: Bearer CRON_SECRET`. Requiere 2 secrets en GitHub: `TINKU_APP_URL` y `CRON_SECRET`. Disparable manual via `workflow_dispatch`.
+- Bug fix en `/webhooks/cron/anonymize/route.ts`: el `event_type` iba como `'erased'` pero el enum `consent_event_type` solo acepta `granted/revoked/reconfirmed`. Cambiado a `'revoked'` con notes que identifican la anonimización automática.
+
+**Seed expandido (63 ejercicios):**
+- `scripts/seed-exercises-expanded.mjs` — genera programáticamente ~20 ejercicios por concepto con variedad de números pero formato consistente. Soft-delete de ejercicios previos (FK attempts impide hard-delete).
+- Distribución: M2_NUM_1000 (23: 18 MCQ + 5 numeric_input), M2_ADD_REGROUP (20: 14 + 6), M2_SUB_REGROUP (20: 14 + 6).
+- Todos `pedagogical_review_status='approved'` — **Javier debe revisar pedagógicamente** (generados por templates con números aleatorios).
+
+**numeric_input:**
+- `PracticeClient.tsx` branchea por `exercise.exercise_type`:
+  - MCQ: grid de 4 botones (sin cambios).
+  - numeric_input: `<input inputMode="numeric" pattern="-?[0-9]*">` grande (Andika, text-5xl, h-20, border bold), label "Escribí el número", placeholder del `content.placeholder`.
+- Submit validado con `/^-?\d+$/.test(selected)` — no permite enviar con input vacío o solo "-".
+- Sanitización en `onChange`: remueve cualquier carácter no-dígito / no-guión.
+- Compatible con el comparador existente (`correctValue === givenValue` trim strings).
+- Hint button funciona igual que en MCQ.
+
+**PNG icons para iOS / compat:**
+- `scripts/generate-icon-pngs.mjs` — usa `sharp` (devDep) para rasterizar `tinku.svg` + `tinku-maskable.svg` a:
+  - `tinku-192.png`, `tinku-512.png` (any)
+  - `tinku-apple-touch.png` (180×180, para iOS Safari)
+  - `tinku-maskable-192.png`, `tinku-maskable-512.png` (maskable para Android adaptive icons)
+- `public/manifest.webmanifest` ahora lista PNG primero, SVG como fallback `any`.
+- `src/app/layout.tsx` → `metadata.icons.apple = [{ url: '/icons/tinku-apple-touch.png', sizes: '180x180' }]`.
+- `sw.js` cachea los PNG como static assets.
+
+**Fix Server Actions en ingress Emergent:**
+- Bug: Next.js 14.2 rechazaba todas las Server Actions con `Invalid Server Actions request` porque el ingress de k8s reescribía `x-forwarded-host=regla-clara.preview.emergentagent.com` mientras `origin` quedaba apuntando al cluster interno `regla-clara.cluster-N.preview.emergentcf.cloud`.
+- Next.js 14.2 NO soporta wildcards en `allowedOrigins` (usa `includes()` exact match — confirmado vía GitHub discussion #59427).
+- Fix aplicado en 3 capas (defense in depth):
+  1. `next.config.mjs`: `allowedOrigins` expandido con 40 cluster-N entries + `allowedForwardedHosts: ['regla-clara.preview.emergentagent.com']`.
+  2. `middleware.ts`: si `x-forwarded-host` != origin's host, reescribe el header `origin` del request downstream para que matcheen. Defensive para casos edge.
+  3. Documentado en comentarios del config para debug futuro.
   - Confetti con `canvas-confetti` (ráfagas escalonadas para `mastered`).
   - Sonido opcional vía Web Audio API (sin assets); toggle 🔊/🔈 persistido en `localStorage['tinku-sound']`.
   - Cumple UX infantil: celebración ≥1.5s antes de habilitar el cierre (`MIN_DURATION_MS=1500`). Texto placeholder "Uff, qué emoción…" mientras está deshabilitado.
@@ -269,14 +306,18 @@ Tutor IA Ari (Ola 4), MercadoPago real, portal docente, push, offline avanzado, 
 ## Backlog prioritizado (P0 / P1 / P2)
 
 ### P0 — Bloqueantes Ola 1 (todo completo ✅)
-- Todo cerrado. Fases 0 a 7 completas. Resend real integrado.
+- Todo cerrado. Fases 0 a 7 + Sprint P1 completas.
 
-### P1 — Calidad Ola 1
-- [ ] Verificar dominio propio en Resend (ej: tinku.app) para enviar emails a cualquier destinatario (hoy solo sandbox → `delivered@resend.dev`).
-- [ ] Agendar el cron `/webhooks/cron/anonymize` en un scheduler real (Supabase Scheduled Function, Vercel Cron, o GitHub Actions). Hoy está manual.
-- [ ] Seed de ejercicios: ampliar a 20+ por concepto para evitar que reintentos marquen `correct_retry` demasiado seguido (notado por el testing agent).
-- [ ] Exercise type `numeric_input` además de MCQ (hoy solo MCQ en seed).
-- [ ] Ícono PWA PNG fallback (hoy solo SVG) para mejor soporte en iOS antiguos.
+### P1 — Calidad Ola 1 (sprint 2026-04-17 completado ✅)
+- ✅ Agendado `/webhooks/cron/anonymize` en `.github/workflows/anonymize-cron.yml` (cron diario 03:15 UTC). Requiere secrets `TINKU_APP_URL` + `CRON_SECRET`.
+- ✅ Seed expandido a 63 ejercicios (23+20+20 por concepto, incluye numeric_input).
+- ✅ Exercise type `numeric_input` soportado en PracticeClient.
+- ✅ Iconos PNG (192/512/180) + maskable generados con sharp.
+- ✅ Fix Server Actions en ingress (allowedOrigins 40 cluster-N + allowedForwardedHosts + middleware rewrite).
+
+### P1 — Pendientes (nuevos)
+- [ ] Verificar dominio propio en Resend para enviar emails a cualquier destinatario (hoy solo sandbox).
+- [ ] Pedagogical review de los 60+ ejercicios nuevos (hoy `approved` por default, generados programáticamente).
 - [ ] PostHog / Sentry reales (hoy stub en app_logs).
 
 ### P2 — Ola 2+
@@ -286,6 +327,7 @@ Tutor IA Ari (Ola 4), MercadoPago real, portal docente, push, offline avanzado, 
 - [ ] Portal docente.
 - [ ] Reglas de concept_links pobladas (grafo de prerequisites).
 - [ ] WhatsApp/SMS double opt-in para consentimiento.
+- [ ] Expandir Isla de los Números a grade_1 + grade_3 (hoy solo grade_2).
 
 ---
 

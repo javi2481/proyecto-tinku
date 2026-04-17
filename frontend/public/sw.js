@@ -7,6 +7,9 @@ const STATIC_ASSETS = [
   '/manifest.webmanifest',
   '/icons/tinku.svg',
   '/icons/tinku-maskable.svg',
+  '/icons/tinku-192.png',
+  '/icons/tinku-512.png',
+  '/icons/tinku-apple-touch.png',
 ];
 
 self.addEventListener('install', (event) => {

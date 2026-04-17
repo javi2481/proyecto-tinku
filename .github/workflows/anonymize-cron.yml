@@ -1,0 +1,40 @@
+name: anonymize-students-soft-deleted
+
+# Cron: ejecuta todos los días a las 03:15 UTC (00:15 ART / 05:15 CET)
+# Llama al endpoint /webhooks/cron/anonymize que anonimiza students con
+# deletion_requested_at >= NOW() - 30 days.
+#
+# Requiere 2 secretos en el repo:
+#   - TINKU_APP_URL: URL base de la app (ej: https://tinku.app o preview de Emergent)
+#   - CRON_SECRET: mismo valor que /app/frontend/.env.local CRON_SECRET
+
+on:
+  schedule:
+    - cron: '15 3 * * *'
+  workflow_dispatch: {} # permite disparo manual desde la UI de GitHub
+
+jobs:
+  anonymize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Call anonymize endpoint
+        run: |
+          if [ -z "${{ secrets.TINKU_APP_URL }}" ] || [ -z "${{ secrets.CRON_SECRET }}" ]; then
+            echo "::error::Missing TINKU_APP_URL or CRON_SECRET repo secret"
+            exit 1
+          fi
+          RESPONSE=$(curl -sS -w "\n__HTTP_STATUS:%{http_code}" -X POST \
+            "${{ secrets.TINKU_APP_URL }}/webhooks/cron/anonymize" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json")
+          STATUS=$(echo "$RESPONSE" | grep -oE '__HTTP_STATUS:[0-9]+' | cut -d: -f2)
+          BODY=$(echo "$RESPONSE" | sed '/__HTTP_STATUS:/d')
+          echo "Status: $STATUS"
+          echo "Body: $BODY"
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::Anonymize endpoint returned $STATUS"
+            exit 1
+          fi
+          # Mostrar summary de processed
+          echo "$BODY" | python3 -c "import sys, json; r = json.load(sys.stdin); print(f'::notice::Processed {r[\"processed\"]} students')" || true

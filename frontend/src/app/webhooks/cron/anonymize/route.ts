@@ -74,9 +74,9 @@ export async function POST(req: NextRequest) {
       await svc.from('parental_consents').insert({
         student_id: s.id,
         parent_id: s.parent_id,
-        event_type: 'erased',
+        event_type: 'revoked',
         consent_text_version: 'v1',
-        notes: `Automatic anonymization after ${RETENTION_DAYS}d grace period`,
+        notes: `Automatic anonymization after ${RETENTION_DAYS}d grace period — data erased`,
       });
 
       await logDataAccess({

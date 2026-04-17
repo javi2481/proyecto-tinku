@@ -10,7 +10,25 @@ import { createServerClient } from '@supabase/ssr';
  *   - student: via signInAnonymously({ options: { data: { role: 'student' } } })
  */
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({ request });
+  // Fix "Invalid Server Actions request" en entornos con ingress proxy (Emergent preview):
+  // el ingress reescribe x-forwarded-host al preview URL pero deja `origin` apuntando
+  // al cluster interno. Next.js 14.2 compara ambos literalmente y rechaza la SA.
+  // Normalizamos `origin` para que matchee `x-forwarded-host`.
+  const forwardedHost = request.headers.get('x-forwarded-host');
+  const originHeader = request.headers.get('origin');
+  const requestHeaders = new Headers(request.headers);
+  if (forwardedHost && originHeader) {
+    try {
+      const originUrl = new URL(originHeader);
+      if (originUrl.host !== forwardedHost) {
+        requestHeaders.set('origin', `${originUrl.protocol}//${forwardedHost}`);
+      }
+    } catch {
+      // origin malformado — lo dejamos pasar
+    }
+  }
+
+  let response = NextResponse.next({ request: { headers: requestHeaders } });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -24,7 +42,7 @@ export async function middleware(request: NextRequest) {
           for (const { name, value } of cookiesToSet) {
             request.cookies.set(name, value);
           }
-          response = NextResponse.next({ request });
+          response = NextResponse.next({ request: { headers: requestHeaders } });
           for (const { name, value, options } of cookiesToSet) {
             response.cookies.set(name, value, options);
           }
