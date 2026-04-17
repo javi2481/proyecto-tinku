@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-andika: 'Andika', system-ui, sans-serif;
+  --font-parent: 'Inter', system-ui, sans-serif;
+}
+
+html, body { height: 100%; }
+body {
+  @apply bg-tinku-mist text-tinku-ink;
+  font-family: var(--font-parent);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Todo lo que viva dentro de .student-scope usa Andika y tamaños infantiles */
+.student-scope { font-family: var(--font-student); font-size: 18px; line-height: 1.6; }
+.student-scope button, .student-scope a[role='button'] {
+  min-width: 48px; min-height: 48px;
+}
+.student-scope .exercise-target { min-width: 56px; min-height: 56px; }
