@@ -70,6 +70,21 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(student)/isla/numeros/page.js"
+    ],
+    "/(parent)/students/[id]/edit/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(parent)/students/[id]/edit/page.js"
+    ],
+    "/(student)/isla/numeros/concepto/[id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(student)/isla/numeros/concepto/[id]/page.js"
+    ],
+    "/(student)/isla/numeros/repaso/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(student)/isla/numeros/repaso/page.js"
     ]
   }
 }

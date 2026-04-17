@@ -1,8 +1,9 @@
 {
-  "/page": "app/page.js",
   "/entrar/page": "app/entrar/page.js",
-  "/(parent)/dashboard/page": "app/(parent)/dashboard/page.js",
   "/(parent)/students/[id]/page": "app/(parent)/students/[id]/page.js",
   "/(student)/islas/page": "app/(student)/islas/page.js",
-  "/(student)/isla/numeros/page": "app/(student)/isla/numeros/page.js"
+  "/(student)/isla/numeros/page": "app/(student)/isla/numeros/page.js",
+  "/(student)/isla/numeros/concepto/[id]/page": "app/(student)/isla/numeros/concepto/[id]/page.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/(student)/isla/numeros/repaso/page": "app/(student)/isla/numeros/repaso/page.js"
 }

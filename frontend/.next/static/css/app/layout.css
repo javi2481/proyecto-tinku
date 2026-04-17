@@ -1198,6 +1198,12 @@ video {
 .bg-tinku-sea\/5 {
   background-color: rgb(42 182 199 / 0.05);
 }
+.bg-tinku-leaf\/25 {
+  background-color: rgb(87 184 148 / 0.25);
+}
+.bg-white\/20 {
+  background-color: rgb(255 255 255 / 0.2);
+}
 .bg-gradient-to-b {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
 }
@@ -1244,6 +1250,11 @@ video {
   --tw-gradient-to: rgb(42 182 199 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
+.from-tinku-sea {
+  --tw-gradient-from: #2AB6C7 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(42 182 199 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
 .via-tinku-mist {
   --tw-gradient-to: rgb(238 244 247 / 0)  var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), #EEF4F7 var(--tw-gradient-via-position), var(--tw-gradient-to);
@@ -1269,6 +1280,9 @@ video {
 }
 .to-tinku-sand\/40 {
   --tw-gradient-to: rgb(245 230 200 / 0.4) var(--tw-gradient-to-position);
+}
+.to-tinku-sea\/80 {
+  --tw-gradient-to: rgb(42 182 199 / 0.8) var(--tw-gradient-to-position);
 }
 .p-12 {
   padding: 3rem;
@@ -1527,6 +1541,12 @@ video {
 .text-white\/70 {
   color: rgb(255 255 255 / 0.7);
 }
+.text-white\/80 {
+  color: rgb(255 255 255 / 0.8);
+}
+.text-white\/90 {
+  color: rgb(255 255 255 / 0.9);
+}
 .underline {
   text-decoration-line: underline;
 }
@@ -1651,6 +1671,11 @@ body {
 .hover\:scale-\[1\.02\]:hover {
   --tw-scale-x: 1.02;
   --tw-scale-y: 1.02;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.hover\:scale-\[1\.01\]:hover {
+  --tw-scale-x: 1.01;
+  --tw-scale-y: 1.01;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .hover\:border-tinku-ink\/30:hover {
@@ -1782,6 +1807,10 @@ body {
 
   .sm\:inline {
     display: inline;
+  }
+
+  .sm\:flex {
+    display: flex;
   }
 
   .sm\:grid-cols-2 {

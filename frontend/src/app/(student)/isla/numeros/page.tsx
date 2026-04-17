@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { strings } from '@/content/strings/es-AR';
+import { getDailyReviewStatus } from '@/lib/review/daily';
+import { DailyReviewCard } from './DailyReviewCard';
 import type { GradeLevel } from '@/types/database';
 
 export const dynamic = 'force-dynamic';
@@ -11,25 +13,24 @@ export default async function IslaNumerosPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/entrar');
 
-  // Trae el student con su grado (desde .auth_user_id)
   const { data: student } = await supabase
     .from('students')
     .select('id, first_name, current_grade, total_xp')
     .eq('auth_user_id', user.id)
     .maybeSingle();
-
   if (!student) redirect('/entrar');
 
   const grade = student.current_grade as GradeLevel;
 
-  // Conceptos del grado (orden de display)
-  const { data: concepts } = await supabase
-    .from('concepts')
-    .select('id, code, name_es, description_es, display_order')
-    .eq('primary_subject', 'math')
-    .eq('grade', grade)
-    .is('deleted_at', null)
-    .order('display_order', { ascending: true });
+  const [{ data: concepts }, reviewStatus] = await Promise.all([
+    supabase.from('concepts')
+      .select('id, code, name_es, description_es, display_order')
+      .eq('primary_subject', 'math')
+      .eq('grade', grade)
+      .is('deleted_at', null)
+      .order('display_order', { ascending: true }),
+    getDailyReviewStatus(),
+  ]);
 
   const conceptsList = concepts ?? [];
   const conceptIds = conceptsList.map((c) => c.id as string);
@@ -76,7 +77,11 @@ export default async function IslaNumerosPage() {
             <p className="text-tinku-ink/70">{strings.student.islaNumeros.comingSoonBody}</p>
           </section>
         ) : (
-          <section data-testid="concepts-grid" className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <>
+            {reviewStatus.hasEnoughContent && (
+              <DailyReviewCard alreadyDoneToday={reviewStatus.alreadyDoneToday} />
+            )}
+            <section data-testid="concepts-grid" className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {conceptsList.map((c) => {
               const id = c.id as string;
               const m = masteryByConcept.get(id);
@@ -118,6 +123,7 @@ export default async function IslaNumerosPage() {
               );
             })}
           </section>
+          </>
         )}
       </div>
     </div>

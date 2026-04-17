@@ -187,6 +187,19 @@ export const strings = {
     logros: {
       navLink: 'Mis medallas',
     },
+    dailyReview: {
+      pill: 'REPASO DIARIO · 5 MIN',
+      cardTitle: '¡Tu repaso de hoy te espera!',
+      cardBody: '5 ejercicios cortitos para no olvidarte lo que aprendiste.',
+      doneCardTitle: 'Ya hiciste tu repaso de hoy 🎯',
+      doneCardBody: 'Seguí practicando lo que más te guste o volvé mañana.',
+      progressLabel: 'Ejercicio {idx} de {total}',
+      completeTitle: '¡Repaso completo!',
+      completeBody: 'Respondiste {correct} de {total}. Seguí así, {studentName}.',
+      completeCta: '¡A otra actividad!',
+      firstBadgeTitle: '¡Tu primera medalla de repaso!',
+      firstBadgeBody: 'Ganaste la medalla "Repaso del día". Volvé mañana por otra.',
+    },
   },
 } as const;
 
