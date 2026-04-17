@@ -49,11 +49,14 @@ console.log(`\n🔎 Encontrados ${toDelete.length} user(s):`);
 for (const u of toDelete) console.log(`  - ${u.email} (${u.provider ?? '?'}) → ${u.id}`);
 
 for (const u of toDelete) {
-  // Antes de borrar, limpiar data_access_log que tiene FK NO ACTION al user
+  // Limpiar TODAS las referencias que bloquean el delete (FK ON DELETE RESTRICT / NO ACTION)
   await svc.from('data_access_log').delete().eq('accessor_auth_uid', u.id);
-  // Limpiar email_verifications (FK CASCADE, debería ir solo pero por si acaso)
+  await svc.from('data_access_log').update({ accessor_id: null }).eq('accessor_id', u.id);
   await svc.from('email_verifications').delete().eq('profile_id', u.id);
-  // Delete auth user (cascades a profiles, subscriptions, parental_consents, etc.)
+  await svc.from('parental_consents').delete().eq('parent_id', u.id);
+  await svc.from('exercises').update({ pedagogical_reviewer_id: null }).eq('pedagogical_reviewer_id', u.id);
+  await svc.from('exercises').update({ created_by: null }).eq('created_by', u.id);
+  // Subscriptions + profiles cascadean solos desde auth.users delete
   const { error } = await svc.auth.admin.deleteUser(u.id);
   if (error) {
     console.error(`❌ ${u.email}: ${error.message}`);
