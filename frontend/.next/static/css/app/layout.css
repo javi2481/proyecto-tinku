@@ -1078,6 +1078,10 @@ video {
 .border-transparent {
   border-color: transparent;
 }
+.border-tinku-sand {
+  --tw-border-opacity: 1;
+  border-color: rgb(245 230 200 / var(--tw-border-opacity));
+}
 .bg-gray-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
@@ -1190,6 +1194,9 @@ video {
 .bg-yellow-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 249 195 / var(--tw-bg-opacity));
+}
+.bg-tinku-sea\/5 {
+  background-color: rgb(42 182 199 / 0.05);
 }
 .bg-gradient-to-b {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
@@ -1689,6 +1696,9 @@ body {
 .hover\:bg-white:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+.hover\:bg-tinku-ink\/90:hover {
+  background-color: rgb(30 42 58 / 0.9);
 }
 .hover\:text-tinku-ink:hover {
   --tw-text-opacity: 1;

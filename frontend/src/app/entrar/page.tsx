@@ -3,19 +3,26 @@ import { redirect } from 'next/navigation';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { strings } from '@/content/strings/es-AR';
 import { LoginCodeForm } from './LoginCodeForm';
+import { ParentSessionPrompt } from './ParentSessionPrompt';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * /entrar — página de login del alumno. Pública, sin `.student-scope`
  * porque el padre puede estar al lado leyendo. Sí usamos tap targets grandes.
+ *
+ * Si hay sesión activa de alumno: mandamos directo a /islas.
+ * Si hay sesión de padre: mostramos aviso + opción a salir (no redirect
+ * silencioso, así el padre entiende por qué no ve el form del chico).
  */
 export default async function EntrarPage() {
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   const role = (user?.user_metadata as { role?: string } | undefined)?.role;
+
   if (user && role === 'student') redirect('/islas');
-  if (user && role !== 'student') redirect('/dashboard');
+
+  const showParentPrompt = Boolean(user && role !== 'student');
 
   return (
     <main className="student-scope min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-tinku-sea/20 via-tinku-mist to-tinku-sand/30">
@@ -26,13 +33,19 @@ export default async function EntrarPage() {
           <p className="text-tinku-ink/70">{strings.student.entrar.subtitle}</p>
         </div>
 
-        <div data-testid="entrar-page" className="rounded-3xl bg-white p-6 sm:p-8 shadow-sm space-y-5">
-          <LoginCodeForm />
-        </div>
+        {showParentPrompt ? (
+          <ParentSessionPrompt email={user!.email ?? ''} />
+        ) : (
+          <div data-testid="entrar-page" className="rounded-3xl bg-white p-6 sm:p-8 shadow-sm space-y-5">
+            <LoginCodeForm />
+          </div>
+        )}
 
-        <p className="text-center text-sm text-tinku-ink/60">
-          {strings.student.entrar.help}
-        </p>
+        {!showParentPrompt && (
+          <p className="text-center text-sm text-tinku-ink/60">
+            {strings.student.entrar.help}
+          </p>
+        )}
 
         <p className="text-center text-xs">
           <Link href="/" className="text-tinku-ink/40 hover:text-tinku-ink/70">

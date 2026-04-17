@@ -6,14 +6,16 @@
         "app/(auth)/signup/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=true!",
         "app/(parent)/dashboard/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
         "app/(parent)/students/new/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
-        "app/(parent)/students/[id]/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!"
+        "app/(parent)/students/[id]/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
+        "app/entrar/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!"
       },
       "layer": {
         "app/(auth)/login/page": "action-browser",
         "app/(auth)/signup/page": "action-browser",
         "app/(parent)/dashboard/page": "rsc",
         "app/(parent)/students/new/page": "rsc",
-        "app/(parent)/students/[id]/page": "rsc"
+        "app/(parent)/students/[id]/page": "rsc",
+        "app/entrar/page": "rsc"
       }
     },
     "5baa3b302e9c8bcb97e2c9e8f7125aec3d9397b6": {
@@ -22,14 +24,16 @@
         "app/(auth)/signup/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=true!",
         "app/(parent)/dashboard/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
         "app/(parent)/students/new/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
-        "app/(parent)/students/[id]/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!"
+        "app/(parent)/students/[id]/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
+        "app/entrar/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!"
       },
       "layer": {
         "app/(auth)/login/page": "action-browser",
         "app/(auth)/signup/page": "action-browser",
         "app/(parent)/dashboard/page": "rsc",
         "app/(parent)/students/new/page": "rsc",
-        "app/(parent)/students/[id]/page": "rsc"
+        "app/(parent)/students/[id]/page": "rsc",
+        "app/entrar/page": "rsc"
       }
     },
     "6b0fc2320d5fa4a2e9daf26ce882bcd3460ec7e8": {
@@ -38,14 +42,16 @@
         "app/(auth)/signup/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=true!",
         "app/(parent)/dashboard/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
         "app/(parent)/students/new/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
-        "app/(parent)/students/[id]/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!"
+        "app/(parent)/students/[id]/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
+        "app/entrar/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!"
       },
       "layer": {
         "app/(auth)/login/page": "action-browser",
         "app/(auth)/signup/page": "action-browser",
         "app/(parent)/dashboard/page": "rsc",
         "app/(parent)/students/new/page": "rsc",
-        "app/(parent)/students/[id]/page": "rsc"
+        "app/(parent)/students/[id]/page": "rsc",
+        "app/entrar/page": "rsc"
       }
     },
     "8a86f2fca4f4c3b8e630578d428a85628c74cd5a": {
@@ -54,14 +60,16 @@
         "app/(auth)/signup/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=true!",
         "app/(parent)/dashboard/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
         "app/(parent)/students/new/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
-        "app/(parent)/students/[id]/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!"
+        "app/(parent)/students/[id]/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
+        "app/entrar/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!"
       },
       "layer": {
         "app/(auth)/login/page": "action-browser",
         "app/(auth)/signup/page": "action-browser",
         "app/(parent)/dashboard/page": "rsc",
         "app/(parent)/students/new/page": "rsc",
-        "app/(parent)/students/[id]/page": "rsc"
+        "app/(parent)/students/[id]/page": "rsc",
+        "app/entrar/page": "rsc"
       }
     },
     "d967ff99f1b2263d14115f6588336c3c4a867fb0": {
@@ -70,14 +78,16 @@
         "app/(auth)/signup/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=true!",
         "app/(parent)/dashboard/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
         "app/(parent)/students/new/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
-        "app/(parent)/students/[id]/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!"
+        "app/(parent)/students/[id]/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!",
+        "app/entrar/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Factions.ts%22%2C%5B%22verifyEmailToken%22%2C%22signupAction%22%2C%22loginAction%22%2C%22resendVerifyAction%22%2C%22signOutAction%22%5D%5D%5D&__client_imported__=!"
       },
       "layer": {
         "app/(auth)/login/page": "action-browser",
         "app/(auth)/signup/page": "action-browser",
         "app/(parent)/dashboard/page": "rsc",
         "app/(parent)/students/new/page": "rsc",
-        "app/(parent)/students/[id]/page": "rsc"
+        "app/(parent)/students/[id]/page": "rsc",
+        "app/entrar/page": "rsc"
       }
     },
     "079dfaacd08c7e78ea04d8f79e0135bb19d15724": {
@@ -128,6 +138,26 @@
       "layer": {
         "app/(parent)/students/new/page": "action-browser",
         "app/(parent)/students/[id]/page": "action-browser"
+      }
+    },
+    "9851e434b85d034e76210ace434d5ca3bf858eca": {
+      "workers": {
+        "app/entrar/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Fstudent-actions.ts%22%2C%5B%22studentLoginAction%22%2C%22studentSignOutAction%22%5D%5D%5D&__client_imported__=true!",
+        "app/(student)/islas/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Fstudent-actions.ts%22%2C%5B%22studentLoginAction%22%2C%22studentSignOutAction%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/entrar/page": "action-browser",
+        "app/(student)/islas/page": "rsc"
+      }
+    },
+    "a7f6d34fa37b4ad095866b5d3bcc2cedf125f42f": {
+      "workers": {
+        "app/entrar/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Fstudent-actions.ts%22%2C%5B%22studentLoginAction%22%2C%22studentSignOutAction%22%5D%5D%5D&__client_imported__=true!",
+        "app/(student)/islas/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fauth%2Fstudent-actions.ts%22%2C%5B%22studentLoginAction%22%2C%22studentSignOutAction%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/entrar/page": "action-browser",
+        "app/(student)/islas/page": "rsc"
       }
     }
   },
