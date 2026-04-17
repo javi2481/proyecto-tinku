@@ -5,6 +5,7 @@ import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { logger } from '@/lib/observability/logger';
 import { logDataAccess } from '@/lib/audit/log';
+import { getReviewStreak, streakBadgesToAward } from '@/lib/review/streak';
 import type { Exercise, GradeLevel } from '@/types/database';
 
 /**
@@ -195,9 +196,9 @@ export async function startDailyReviewAction(): Promise<DailyReviewStartResult> 
   };
 }
 
-/** Marca el repaso como terminado — cierra la session y otorga badge si es el primer repaso del alumno. */
+/** Marca el repaso como terminado — cierra la session y otorga badges (daily_review + streaks). */
 export async function completeDailyReviewAction(sessionId: string): Promise<{
-  badgeAwarded: { code: string; name_es: string; icon_url: string } | null;
+  badgesAwarded: Array<{ code: string; name_es: string; icon_url: string }>;
 }> {
   const { studentId } = await requireStudent();
   const svc = createServiceSupabase();
@@ -205,7 +206,7 @@ export async function completeDailyReviewAction(sessionId: string): Promise<{
   // Cerrar la session
   const { data: sess } = await svc
     .from('sessions').select('started_at, exercises_attempted').eq('id', sessionId).maybeSingle();
-  if (!sess) return { badgeAwarded: null };
+  if (!sess) return { badgesAwarded: [] };
 
   const duration = Math.floor(
     (Date.now() - new Date(sess.started_at as string).getTime()) / 1000,
@@ -216,44 +217,52 @@ export async function completeDailyReviewAction(sessionId: string): Promise<{
     close_reason: 'user_exit',
   }).eq('id', sessionId);
 
-  // Award badge daily_review si no lo tiene (first-time)
-  const { data: catalog } = await svc
-    .from('badges_catalog')
-    .select('id, code, name_es, icon_url, xp_reward')
-    .eq('code', 'daily_review')
-    .eq('is_active', true)
-    .maybeSingle();
-
-  let badgeAwarded: { code: string; name_es: string; icon_url: string } | null = null;
-  if (catalog) {
-    const { data: existing } = await svc
-      .from('student_badges').select('id')
-      .eq('student_id', studentId).eq('badge_id', catalog.id as string).maybeSingle();
-    if (!existing) {
-      await svc.from('student_badges').insert({
-        student_id: studentId, badge_id: catalog.id as string,
-      });
-      if ((catalog.xp_reward as number) > 0) {
-        const { data: st } = await svc.from('students').select('total_xp').eq('id', studentId).maybeSingle();
-        await svc.from('students').update({
-          total_xp: ((st?.total_xp as number) ?? 0) + (catalog.xp_reward as number),
-        }).eq('id', studentId);
-      }
-      badgeAwarded = {
-        code: catalog.code as string,
-        name_es: catalog.name_es as string,
-        icon_url: catalog.icon_url as string,
-      };
-    }
-  }
-
-  await logger.info('daily_review.complete', 'done', { studentId, sessionId, badgeAwarded: badgeAwarded?.code });
+  // Log completion PRIMERO (para que getReviewStreak vea este evento al calcular)
   await logDataAccess({
     studentId,
     accessType: 'write',
     accessTarget: 'daily_review.complete',
-    metadata: { sessionId, badge: badgeAwarded?.code ?? null },
+    metadata: { sessionId },
   });
 
-  return { badgeAwarded };
+  const badgesAwarded: Array<{ code: string; name_es: string; icon_url: string }> = [];
+
+  // Candidatos: daily_review (first-time) + streak_3/7/30_review según streak actual
+  const candidates = ['daily_review'];
+  const streak = await getReviewStreak(studentId);
+  for (const b of streakBadgesToAward(streak.current)) candidates.push(b);
+
+  for (const code of candidates) {
+    const { data: catalog } = await svc
+      .from('badges_catalog')
+      .select('id, code, name_es, icon_url, xp_reward')
+      .eq('code', code).eq('is_active', true).maybeSingle();
+    if (!catalog) continue;
+    const { data: existing } = await svc
+      .from('student_badges').select('id')
+      .eq('student_id', studentId).eq('badge_id', catalog.id as string).maybeSingle();
+    if (existing) continue;
+
+    await svc.from('student_badges').insert({
+      student_id: studentId, badge_id: catalog.id as string,
+    });
+    if ((catalog.xp_reward as number) > 0) {
+      const { data: st } = await svc.from('students').select('total_xp').eq('id', studentId).maybeSingle();
+      await svc.from('students').update({
+        total_xp: ((st?.total_xp as number) ?? 0) + (catalog.xp_reward as number),
+      }).eq('id', studentId);
+    }
+    badgesAwarded.push({
+      code: catalog.code as string,
+      name_es: catalog.name_es as string,
+      icon_url: catalog.icon_url as string,
+    });
+  }
+
+  await logger.info('daily_review.complete', 'done', {
+    studentId, sessionId, streakCurrent: streak.current,
+    badges: badgesAwarded.map(b => b.code),
+  });
+
+  return { badgesAwarded };
 }

@@ -85,6 +85,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(student)/isla/numeros/repaso/page.js"
+    ],
+    "/(parent)/students/[id]/progress/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(parent)/students/[id]/progress/page.js"
     ]
   }
 }

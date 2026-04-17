@@ -68,12 +68,17 @@ export function DailyReviewClient({ sessionId, exercises, studentName }: Props) 
     startTransition(async () => {
       const res = await completeDailyReviewAction(sessionId);
       setDone(true);
-      if (res.badgeAwarded) {
+      const firstBadge = res.badgesAwarded[0];
+      if (firstBadge) {
         setCelebration({
           variant: 'badge',
-          title: strings.student.dailyReview.firstBadgeTitle,
-          body: strings.student.dailyReview.firstBadgeBody,
-          badgeName: res.badgeAwarded.name_es,
+          title: firstBadge.code.startsWith('streak_')
+            ? strings.student.dailyReview.streakBadgeTitle
+            : strings.student.dailyReview.firstBadgeTitle,
+          body: firstBadge.code.startsWith('streak_')
+            ? strings.student.dailyReview.streakBadgeBody
+            : strings.student.dailyReview.firstBadgeBody,
+          badgeName: firstBadge.name_es,
           ctaLabel: '¡Dale!',
         });
       } else {
@@ -218,6 +223,12 @@ export function DailyReviewClient({ sessionId, exercises, studentName }: Props) 
                   <p data-testid="review-feedback-xp" className="text-sm text-tinku-ink/80">
                     Ganaste <strong>+{feedback.xp} XP</strong> 🌟
                   </p>
+                )}
+                {!feedback.correct && (exercise.content as { explanation?: string }).explanation && (
+                  <div data-testid="review-feedback-explanation" className="text-sm text-tinku-ink/85 bg-white/80 rounded-xl p-3 border border-tinku-ink/10">
+                    <span className="font-semibold">Mirá: </span>
+                    {(exercise.content as { explanation?: string }).explanation}
+                  </div>
                 )}
                 <button
                   type="button"

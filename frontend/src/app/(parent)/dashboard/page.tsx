@@ -6,6 +6,7 @@ import { strings } from '@/content/strings/es-AR';
 import type { GradeLevel } from '@/types/database';
 import { VerifyBanner } from './VerifyBanner';
 import { isAdminEmail } from '@/lib/auth/admin';
+import { StudentActivityCard } from './StudentActivityCard';
 
 export const dynamic = 'force-dynamic';
 
@@ -111,7 +112,7 @@ export default async function DashboardPage() {
               const avatar = getAvatar(s.avatar_id as string);
               const pendingDel = Boolean(s.deletion_requested_at);
               return (
-                <li key={s.id as string} data-testid={`student-row-${s.id}`} className="py-4 first:pt-0 last:pb-0">
+                <li key={s.id as string} data-testid={`student-row-${s.id}`} className="py-4 first:pt-0 last:pb-0 space-y-3">
                   <Link
                     href={`/students/${s.id}`}
                     className="flex items-center gap-4 hover:bg-tinku-mist/50 -mx-3 px-3 py-2 rounded-xl transition-colors"
@@ -140,6 +141,13 @@ export default async function DashboardPage() {
                       )}
                     </div>
                   </Link>
+                  {!pendingDel && (
+                    <StudentActivityCard
+                      studentId={s.id as string}
+                      studentName={s.first_name as string}
+                      loginCode={s.login_code as string}
+                    />
+                  )}
                 </li>
               );
             })}

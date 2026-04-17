@@ -10,6 +10,45 @@ Nada pendiente sin shippear. Si arranca un sprint nuevo, acá va.
 
 ---
 
+## [0.9.0] — 2026-04-17 · MVP shippeable (P1 completo)
+
+### Added
+- **Dashboard del padre con progreso real por hijo** (`/students/[id]/progress`):
+  - Stats: XP total, racha de repaso (current + max), minutos esta semana, conceptos dominados.
+  - Alerta "Le está costando" listando conceptos con `status='struggling'` (p_known < 0.5 con intentos).
+  - Gráfico de barras de **minutos por día últimos 7 días** (CSS puro, sin librería).
+  - Breakdown por concepto con barra de dominio, accuracy, intentos, estado visual (dominado/en progreso/necesita ayuda/sin empezar).
+  - Link "Ver progreso detallado" desde la ficha del alumno.
+- **Card de actividad por hijo en el dashboard del padre** (`StudentActivityCard`):
+  - 5 estados: `done` (✅ verde), `pending` (⏰ amarillo), `soft_alert` (👀 naranja suave), `alert` (🔔 naranja fuerte), `never` (🌱 gris).
+  - Muestra racha actual del repaso diario.
+  - Botón **"Copiar link para WhatsApp"** con mensaje armado listo para pegar en familia.
+  - Link a `/students/[id]/progress` para ver detalle.
+- **Streaks del repaso diario**:
+  - 3 badges nuevos: `streak_3_review`, `streak_7_review`, `streak_30_review`.
+  - `lib/review/streak.ts` — calcula current + max on-the-fly desde `data_access_log` (sin migration).
+  - `completeDailyReviewAction` otorga automáticamente los badges que correspondan al streak actual.
+  - Celebración múltiple: primero daily_review, después el streak badge si hay.
+- **Explicaciones post-respuesta cuando el alumno falla**:
+  - Campo `content.explanation` en `exercises` (JSONB, sin migration).
+  - Script `scripts/add-explanations.mjs` agregó explicaciones por pattern-matching a 121 ejercicios existentes (sumas, restas, siguiente/anterior, valor posicional, descomposición, etc.).
+  - `PracticeClient` y `DailyReviewClient` muestran la explicación en el feedback solo cuando la respuesta es incorrecta ("Mirá: 275 + 155 = 430. Las unidades 5 + 5 pasan de 10...").
+  - Los seeds (`seed-grade1.mjs`, `seed-exercises-expanded.mjs`) ahora aceptan explicaciones opcionales como 4to/3er argumento.
+
+### Files
+- `frontend/src/app/(parent)/students/[id]/progress/page.tsx` · `ProgressContent.tsx`
+- `frontend/src/app/(parent)/dashboard/StudentActivityCard.tsx` · `CopyActivityLinkButton.tsx`
+- `frontend/src/lib/review/streak.ts`
+- `frontend/scripts/add-explanations.mjs` · `seed-badges.mjs` (streak badges)
+
+### Testing
+- Smoke test E2E verificado con Playwright directo (3 flows en 3 screenshots):
+  1. Dashboard del padre con activity card `state='pending'` para Mateo → botón WhatsApp visible.
+  2. `/students/[id]/progress` — stats, alerta, gráfico, 3 concept cards con sus estados correctos.
+  3. Alumno en PracticeClient: eligió respuesta incorrecta → panel de feedback con explicación pedagógica.
+
+---
+
 ## [0.8.0] — 2026-04-17 · Grade 1 + Repaso diario
 
 ### Added

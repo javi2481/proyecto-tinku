@@ -84,6 +84,15 @@ export default async function StudentDetailPage({ params }: PageProps) {
               </span>
             </div>
           </div>
+          <div className="pt-3">
+            <Link
+              href={`/students/${student.id}/progress`}
+              data-testid="view-progress-link"
+              className="inline-flex items-center gap-1.5 h-10 px-4 rounded-xl bg-tinku-sea/10 text-tinku-sea font-semibold text-sm hover:bg-tinku-sea/20"
+            >
+              📊 Ver progreso detallado
+            </Link>
+          </div>
         </div>
       </section>
 

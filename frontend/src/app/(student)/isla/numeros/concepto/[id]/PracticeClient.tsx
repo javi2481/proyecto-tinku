@@ -306,6 +306,12 @@ export function PracticeClient({
                   ¡Dominaste este concepto!
                 </p>
               )}
+              {!feedback.correct && (exercise.content as { explanation?: string }).explanation && (
+                <div data-testid="feedback-explanation" className="text-sm text-tinku-ink/85 bg-white/80 rounded-xl p-3 border border-tinku-ink/10">
+                  <span className="font-semibold">Mirá: </span>
+                  {(exercise.content as { explanation?: string }).explanation}
+                </div>
+              )}
               {feedback.newBadges.length > 0 && (
                 <ul data-testid="feedback-badges" className="space-y-1">
                   {feedback.newBadges.map((b) => (

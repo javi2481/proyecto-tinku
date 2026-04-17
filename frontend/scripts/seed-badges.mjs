@@ -19,6 +19,30 @@ const BADGES = [
     xp_reward: 15,
     unlock_criteria: { type: 'daily_review_complete' },
   },
+  {
+    code: 'streak_3_review',
+    name_es: 'Tres días seguidos',
+    description_es: 'Hiciste tu repaso 3 días consecutivos. ¡Qué constancia!',
+    icon_url: '/badges/streak-review-3.svg',
+    xp_reward: 30,
+    unlock_criteria: { type: 'review_streak', days: 3 },
+  },
+  {
+    code: 'streak_7_review',
+    name_es: 'Una semana entera',
+    description_es: 'Siete días de repaso sin parar. ¡Increíble!',
+    icon_url: '/badges/streak-review-7.svg',
+    xp_reward: 80,
+    unlock_criteria: { type: 'review_streak', days: 7 },
+  },
+  {
+    code: 'streak_30_review',
+    name_es: 'Un mes de fiera',
+    description_es: 'Treinta días de repaso. Sos una leyenda.',
+    icon_url: '/badges/streak-review-30.svg',
+    xp_reward: 300,
+    unlock_criteria: { type: 'review_streak', days: 30 },
+  },
 ];
 
 for (const b of BADGES) {

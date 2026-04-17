@@ -15,11 +15,12 @@ Lista completa en `CHANGELOG.md`. Resumen:
 - Auth alumno (código 6-char + anonymous sign-in).
 - Gestión de hijos + consentimiento parental versionado.
 - Motor adaptativo BKT + Isla de los Números (grade_1 + grade_2).
-- 122 ejercicios seedeados (63 grade_2 + 59 grade_1).
-- Gamificación (XP, streak, badges, celebraciones, Mis Logros).
+- 122 ejercicios seedeados (63 grade_2 + 59 grade_1) con **explicaciones pedagógicas**.
+- Gamificación (XP, streak, badges, celebraciones, Mis Logros, streaks de repaso).
 - Modo repaso diario 5 min.
 - Admin review UI para curar ejercicios.
 - PWA básico + cron anonimización + auditoría central.
+- **Dashboard del padre con progreso detallado por hijo + actividad card con botón WhatsApp**.
 
 ---
 
@@ -32,15 +33,16 @@ Ninguno activo. El producto es **funcionalmente usable** hoy con Paulina.
 ## 🟡 P1 — Calidad Ola 1 (shippeable antes de probar con usuarios reales)
 
 ### Producto
+- [x] ~~Dashboard del padre con progreso real del hijo~~ — **shippeado 2026-04-17**.
+- [x] ~~Recordatorio de repaso diario en dashboard del padre~~ — **shippeado 2026-04-17** (StudentActivityCard).
+- [x] ~~Streak del repaso diario~~ — **shippeado 2026-04-17** (streak_3/7/30_review badges).
+- [x] ~~Explicaciones post-respuesta cuando el chico falla~~ — **shippeado 2026-04-17** (121 ejercicios con explicación).
 - [ ] **Revisión pedagógica** de los 122 ejercicios seedeados (automático-approved hoy). Bloquea mostrar a padres de otros chicos. *Owner: Javier · UI en `/review-exercises`.*
-- [ ] **Dashboard del padre con progreso real del hijo** — qué conceptos domina Paulina, cuáles flojean, minutos jugados esta semana, gráfico de evolución semanal. Hoy solo ve XP + streak. *ETA: ~2h.*
-- [ ] **Recordatorio de repaso diario** en el dashboard del padre — "Paulina no hizo su repaso hoy" con detalle del último día con actividad. Cierra el loop de hábito. *ETA: ~30 min.*
-- [ ] **Streak del repaso diario** (3 días / 7 días / 30 días consecutivos) con badges específicos.
 
 ### Contenido
 - [ ] Seed de ejercicios para **grade_3** (~20 por concepto en 3 conceptos).
 - [ ] Revisar/mejorar distractores de los MCQ generados por template (algunos son demasiado obvios).
-- [ ] Agregar **explicaciones post-respuesta** cuando el chico falla (hoy solo se muestra feedback genérico). Crítico para el valor pedagógico real.
+- [x] ~~Agregar explicaciones post-respuesta cuando el chico falla~~ — **shippeado 2026-04-17**.
 
 ### Infra / deploy
 - [ ] **Verificar dominio Resend** cuando termine el DNS checking → actualizar `RESEND_FROM` en `.env.local` y en producción.

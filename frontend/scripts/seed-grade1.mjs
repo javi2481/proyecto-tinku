@@ -39,19 +39,19 @@ const uniqDistractors = (correct, candidateFn, count = 3) => {
   set.delete(String(correct));
   return [...set].slice(0, count);
 };
-const mcq = (prompt, correct, distractors) => ({
+const mcq = (prompt, correct, distractors, explanation = null) => ({
   exercise_type: 'multiple_choice',
   title_es: prompt.slice(0, 60),
   prompt_es: prompt,
-  content: { options: shuffle([String(correct), ...distractors.map(String)]) },
+  content: explanation ? { options: shuffle([String(correct), ...distractors.map(String)]), explanation } : { options: shuffle([String(correct), ...distractors.map(String)]) },
   correct_answer: { value: String(correct) },
   hints: [],
 });
-const numInput = (prompt, correct, hint) => ({
+const numInput = (prompt, correct, hint, explanation = null) => ({
   exercise_type: 'numeric_input',
   title_es: prompt.slice(0, 60),
   prompt_es: prompt,
-  content: { placeholder: '0', unit: null },
+  content: explanation ? { placeholder: '0', unit: null, explanation } : { placeholder: '0', unit: null },
   correct_answer: { value: String(correct) },
   hints: hint ? [{ text: hint }] : [],
 });

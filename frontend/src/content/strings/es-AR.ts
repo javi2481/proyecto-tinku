@@ -199,6 +199,8 @@ export const strings = {
       completeCta: '¡A otra actividad!',
       firstBadgeTitle: '¡Tu primera medalla de repaso!',
       firstBadgeBody: 'Ganaste la medalla "Repaso del día". Volvé mañana por otra.',
+      streakBadgeTitle: '¡Nueva racha desbloqueada!',
+      streakBadgeBody: 'Cuantos más días seguidos, más grande la medalla.',
     },
   },
 } as const;
