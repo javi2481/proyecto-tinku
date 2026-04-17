@@ -2,7 +2,6 @@
 
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
-import crypto from 'node:crypto';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { loginCodeSchema } from '@/lib/schemas/student-login';
@@ -66,82 +65,36 @@ export async function studentLoginAction(
     return { ok: false, error: 'invalid_code' };
   }
 
-  // -------------------------------------------------------------------------
-  // Anonymous sign-in de Supabase está OFF en el proyecto por default y no
-  // podemos activarlo sin Personal Access Token. Workaround equivalente:
-  //   - email sintético derivado de student.id (no routeable: tinku.local)
-  //   - password rotado en cada login (nunca persiste en DB)
-  //   - admin.createUser con email_confirm=true (bypass SMTP) la primera vez
-  //   - admin.updateUserById para rotar password en logins siguientes
-  //   - signInWithPassword desde el server client para setear cookie
-  // El trigger handle_new_user detecta role='student' y skippea profile.
-  // -------------------------------------------------------------------------
-
-  const synthEmail = `student-${student.id}@tinku.local`;
-  const tempPassword = crypto.randomBytes(32).toString('hex');
-  const studentMetadata = {
-    role: 'student' as const,
-    student_id: student.id,
-    first_name: student.first_name,
-  };
-
-  let authUserId = student.auth_user_id as string | null;
-
-  if (authUserId) {
-    // Login recurrente: rotar password del auth.users existente
-    const { error: updErr } = await svc.auth.admin.updateUserById(authUserId, {
-      password: tempPassword,
-      user_metadata: studentMetadata,
-    });
-    if (updErr) {
-      // Si el auth.users fue borrado externamente, reintentamos creación
-      if (updErr.message.toLowerCase().includes('not found') || updErr.status === 404) {
-        authUserId = null;
-      } else {
-        await logger.error('student.login', 'updateUserById failed', { err: updErr.message });
-        return { ok: false, error: 'generic' };
-      }
-    }
-  }
-
-  if (!authUserId) {
-    // Primera vez: crear auth.users con email sintético
-    const { data: created, error: createErr } = await svc.auth.admin.createUser({
-      email: synthEmail,
-      password: tempPassword,
-      email_confirm: true,
-      user_metadata: studentMetadata,
-    });
-    if (createErr || !created.user) {
-      await logger.error('student.login', 'admin.createUser failed', {
-        err: createErr?.message ?? 'no user',
-      });
-      return { ok: false, error: 'generic' };
-    }
-    authUserId = created.user.id;
-
-    // Linkeamos antes de signIn para que cualquier query RLS vea el vínculo
-    await svc.from('students')
-      .update({ auth_user_id: authUserId })
-      .eq('id', student.id as string);
-  }
-
-  // Sign in (crea cookie de sesión)
+  // Anonymous sign-in con metadata. El trigger handle_new_user detecta
+  // role='student' y NO crea profile/subscription para este auth.users.
   const supabase = await createServerSupabase();
-  const { error: signErr } = await supabase.auth.signInWithPassword({
-    email: synthEmail,
-    password: tempPassword,
+  const { data: anon, error: anonErr } = await supabase.auth.signInAnonymously({
+    options: {
+      data: {
+        role: 'student',
+        student_id: student.id,
+        first_name: student.first_name,
+      },
+    },
   });
 
-  if (signErr) {
-    await logger.error('student.login', 'signInWithPassword failed', { err: signErr.message });
+  if (anonErr || !anon.user) {
+    await logger.error('student.login', 'anonymous sign-in failed', {
+      err: anonErr?.message ?? 'no user',
+    });
     return { ok: false, error: 'generic' };
   }
 
-  // Actualizar last_active_at y auditar
+  const authUserId = anon.user.id;
+
+  // Vincular auth_user_id al student. Si había uno previo, lo pisamos —
+  // Ola 1 permite una sola sesión activa por student.
   await svc
     .from('students')
-    .update({ last_active_at: new Date().toISOString() })
+    .update({
+      auth_user_id: authUserId,
+      last_active_at: new Date().toISOString(),
+    })
     .eq('id', student.id as string);
 
   await svc.from('data_access_log').insert({
@@ -149,7 +102,7 @@ export async function studentLoginAction(
     accessor_auth_uid: authUserId,
     student_id: student.id as string,
     access_type: 'student_login',
-    access_target: 'auth.synthetic_login',
+    access_target: 'auth.anonymous_signin',
     ip_address: ip,
     user_agent: userAgent,
   });

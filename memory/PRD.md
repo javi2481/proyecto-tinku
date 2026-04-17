@@ -168,7 +168,55 @@ Tutor IA Ari (Ola 4), MercadoPago real, portal docente, push, offline avanzado, 
 **Decisión arquitectural notable:**
 - **Auth del alumno via synthetic email + rotating password** en lugar de anonymous sign-ins. Razón: el toggle de "Anonymous Sign-Ins" en Supabase Dashboard estaba OFF y la Management API para activarlo requiere Personal Access Token (no proyecto-scoped). El workaround es funcionalmente equivalente y produce el mismo resultado (auth.users con JWT que el cliente usa normalmente). Cuando se active el toggle oficial en algún momento, se puede volver al patrón canónico cambiando 30 líneas en `studentLoginAction`.
 
-### ⏳ Fase 5 — Experiencia del alumno (próxima)
+### ✅ Fase 5 + parte de Fase 6 — Experiencia del alumno + Motor adaptativo (completada 2026-01)
+
+**Anonymous sign-ins (Supabase) activado por Javier + revert al patrón canónico** en `studentLoginAction`. Workaround sintético removido. auth.user `student-*@tinku.local` borrado manualmente.
+
+**Migration 0004 aplicada** — seed de contenido mínimo Ola 1 (grade_2 · math):
+- Conceptos: `M2_NUM_1000`, `M2_ADD_REGROUP`, `M2_SUB_REGROUP`
+- 9 ejercicios `multiple_choice` × 3 dificultades (easy/medium/hard)
+- Todos `pedagogical_review_status='approved'` (review pedagógico de Javier pendiente)
+- `exercise_concepts` N:N poblada con primary=true, weight=1.0
+
+**Motor adaptativo (`src/lib/adaptive/engine.ts`):**
+- `updatePKnown(p, outcome, hints)` — BKT simplificado: `p_new = p + 0.15 * (outcome_score − p)` con penalty por hint.
+- `pickDifficulty(p)` — umbrales 0.40/0.65/0.85.
+- `computeXp(base, outcome, hints, penalty)` — scoring con factor por outcome.
+
+**Server actions (`src/lib/sessions/actions.ts`):**
+- `startSessionAction(island)` — reutiliza sesión abierta <2h o crea nueva.
+- `getNextExerciseAction(conceptId, excludeId?)` — selecciona ejercicio por dificultad target con fallback a vecinos.
+- `submitAttemptAction({sessionId, exerciseId, answer, timeSpent, hints})` — INSERT attempt + UPSERT concept_mastery + update session counters + update student total_xp + evalúa badges `first_exercise` y `concept_mastered` + awardea con XP reward.
+- `closeSessionAction(sessionId, reason)` — calcula duration_seconds + marca ended_at + close_reason.
+
+**UI infantil con Andika:**
+- `/isla/numeros` — grid de regiones (conceptos del grado del alumno) con barra de progreso individual + ícono 🌟 si dominado.
+- `/isla/numeros/concepto/[id]` — shell de práctica:
+  - Header con concepto + barra de progreso grande + botón Salir.
+  - Ejercicio: prompt grande, 4 opciones como tap targets 64px con feedback visual al seleccionar.
+  - Hint opcional (penaliza XP).
+  - Feedback post-submit con celebración `animate-celebrate`: verde si correcto (+XP), naranja si incorrecto ("Casi. ¿Probamos otra?"). Sin rojo, sin vergüenza.
+  - Pantalla "¡Gran trabajo!" cuando se completa tanda o domina concepto.
+
+**Testing (Playwright directo, 9/9 PASS):**
+- Login student → /islas → click Isla Números → ver 3 conceptos → click primero → ejercicio con 4 opciones → submit incorrecto → feedback + XP=0 + next → segundo ejercicio → exit → progreso actualizado a 9% (BKT penalizó el error correctamente).
+- test_credentials.md ya tiene student Mateo con código 74RTPM.
+
+### Ejercicios seed para TU review pedagógico (v1 — 9 ejercicios grade_2)
+
+| Concepto | Dif | Prompt | Respuesta |
+|---|---|---|---|
+| Números hasta 1000 | easy | ¿Qué número va después del 249? | 250 |
+| Números hasta 1000 | medium | ¿Cuál es el número más grande? (472, 427, 742, 724) | 742 |
+| Números hasta 1000 | hard | En el número 538, ¿qué valor tiene el 3? | 30 |
+| Suma con reagrupamiento | easy | ¿Cuánto es 23 + 14? | 37 |
+| Suma con reagrupamiento | medium | ¿Cuánto es 28 + 15? | 43 |
+| Suma con reagrupamiento | hard | ¿Cuánto es 47 + 36? | 83 |
+| Resta con reagrupamiento | easy | ¿Cuánto es 48 - 23? | 25 |
+| Resta con reagrupamiento | medium | ¿Cuánto es 52 - 28? | 24 |
+| Resta con reagrupamiento | hard | ¿Cuánto es 70 - 34? | 36 |
+
+### ⏳ Fase 7 — Auditoría + PWA + pulido (próxima, Fase 6 quedó mergeada en esta)
 ### ⏳ Fase 4 — Auth del alumno (anonymous sign-in + login_code)
 ### ⏳ Fase 5 — Experiencia del alumno (islas → ejercicio)
 ### ⏳ Fase 6 — Motor adaptativo heurístico

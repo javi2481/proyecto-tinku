@@ -129,6 +129,38 @@
       "layer": {
         "app/(parent)/students/[id]/page": "action-browser"
       }
+    },
+    "0c760340e018c66556e4465e6e6c8070c4865244": {
+      "workers": {
+        "app/(student)/isla/numeros/concepto/[id]/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fsessions%2Factions.ts%22%2C%5B%22startSessionAction%22%2C%22closeSessionAction%22%2C%22getNextExerciseAction%22%2C%22submitAttemptAction%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/(student)/isla/numeros/concepto/[id]/page": "rsc"
+      }
+    },
+    "4052a19503a5315ecaec57da006d543d0a02dcb6": {
+      "workers": {
+        "app/(student)/isla/numeros/concepto/[id]/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fsessions%2Factions.ts%22%2C%5B%22startSessionAction%22%2C%22closeSessionAction%22%2C%22getNextExerciseAction%22%2C%22submitAttemptAction%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/(student)/isla/numeros/concepto/[id]/page": "rsc"
+      }
+    },
+    "707cc34841e54aa329475fae4008c11f2e21fc8c": {
+      "workers": {
+        "app/(student)/isla/numeros/concepto/[id]/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fsessions%2Factions.ts%22%2C%5B%22startSessionAction%22%2C%22closeSessionAction%22%2C%22getNextExerciseAction%22%2C%22submitAttemptAction%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/(student)/isla/numeros/concepto/[id]/page": "rsc"
+      }
+    },
+    "f57e93ccc56d75a2bd04c06cef892b66c5f07f0e": {
+      "workers": {
+        "app/(student)/isla/numeros/concepto/[id]/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Ffrontend%2Fsrc%2Flib%2Fsessions%2Factions.ts%22%2C%5B%22startSessionAction%22%2C%22closeSessionAction%22%2C%22getNextExerciseAction%22%2C%22submitAttemptAction%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/(student)/isla/numeros/concepto/[id]/page": "rsc"
+      }
     }
   },
   "edge": {},
