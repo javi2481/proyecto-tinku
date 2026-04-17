@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Tinkú">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#BFE2EA"/>
+      <stop offset="1" stop-color="#F6F3EC"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="104" fill="url(#sky)"/>
+  <!-- Isla -->
+  <ellipse cx="256" cy="360" rx="170" ry="40" fill="#E6CE92"/>
+  <path d="M110 360 C 150 300 200 260 256 260 C 312 260 362 300 402 360 Z" fill="#6BAE75"/>
+  <!-- Palmera tronco -->
+  <path d="M256 260 C 250 230 246 200 252 160" stroke="#8A5A1C" stroke-width="14" fill="none" stroke-linecap="round"/>
+  <!-- Hojas -->
+  <g fill="#2F7A8C">
+    <path d="M252 160 C 220 145 198 148 180 170 C 210 170 230 168 252 176 Z"/>
+    <path d="M252 160 C 286 145 310 148 330 172 C 300 172 278 168 252 176 Z"/>
+    <path d="M252 160 C 260 128 280 108 310 104 C 300 130 284 150 262 168 Z"/>
+    <path d="M252 160 C 244 128 224 108 198 104 C 208 130 224 150 244 168 Z"/>
+  </g>
+  <!-- Estrella -->
+  <g fill="#F2B84B">
+    <polygon points="410,110 422,142 456,142 428,162 440,194 410,174 380,194 392,162 364,142 398,142"/>
+  </g>
+  <!-- Letra T -->
+  <g fill="#1D2B2F" font-family="'Andika','Segoe UI',system-ui,sans-serif" font-weight="700" font-size="190">
+    <text x="256" y="240" text-anchor="middle">T</text>
+  </g>
+</svg>

@@ -5,6 +5,7 @@ import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { computeXp, updatePKnown, pickDifficulty } from '@/lib/adaptive/engine';
 import { logger } from '@/lib/observability/logger';
+import { logDataAccess } from '@/lib/audit/log';
 import type { AnswerOutcome, Exercise, ExerciseDifficulty } from '@/types/database';
 
 async function requireStudent() {
@@ -260,6 +261,17 @@ export async function submitAttemptAction(input: SubmitAttemptInput): Promise<Su
     if (badge) newBadges.push(badge);
   }
 
+  // Audit log (fire-and-forget)
+  void auditAttempt(studentId, {
+    session_id: input.sessionId,
+    exercise_id: input.exerciseId,
+    concept_id: conceptId,
+    outcome,
+    xp: xpEarned,
+    mastered: justMastered,
+    badges_awarded: newBadges.map((b) => b.code),
+  });
+
   return {
     correct: isCorrect,
     outcome,
@@ -269,6 +281,16 @@ export async function submitAttemptAction(input: SubmitAttemptInput): Promise<Su
     justMastered,
     newBadges,
   };
+}
+
+// Log de auditoría NO bloqueante, fuera del hot path.
+async function auditAttempt(studentId: string, data: Record<string, unknown>) {
+  await logDataAccess({
+    studentId,
+    accessType: 'write',
+    accessTarget: 'attempts.submit',
+    metadata: data,
+  });
 }
 
 async function awardBadge(

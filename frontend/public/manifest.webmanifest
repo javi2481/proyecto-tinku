@@ -1,0 +1,28 @@
+{
+  "name": "Tinkú — Las Islas del Saber",
+  "short_name": "Tinkú",
+  "description": "Plataforma educativa para chicos de 6 a 12 años. Matemática y lengua en un mundo de islas.",
+  "start_url": "/islas",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F6F3EC",
+  "theme_color": "#2F7A8C",
+  "lang": "es-AR",
+  "dir": "ltr",
+  "categories": ["education", "kids"],
+  "icons": [
+    {
+      "src": "/icons/tinku.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/tinku-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

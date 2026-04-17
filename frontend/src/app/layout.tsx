@@ -1,6 +1,7 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Andika, Inter } from 'next/font/google';
 import './globals.css';
+import { RegisterSW } from '@/components/pwa/RegisterSW';
 
 const andika = Andika({
   subsets: ['latin'],
@@ -17,13 +18,35 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: 'Tinkú — Aprender jugando',
-  description: 'Plataforma educativa para chicos argentinos de 6 a 12 años. Las Islas del Saber.',
+  description:
+    'Plataforma educativa para chicos argentinos de 6 a 12 años. Las Islas del Saber.',
+  manifest: '/manifest.webmanifest',
+  applicationName: 'Tinkú',
+  appleWebApp: {
+    capable: true,
+    title: 'Tinkú',
+    statusBarStyle: 'default',
+  },
+  icons: {
+    icon: [{ url: '/icons/tinku.svg', type: 'image/svg+xml' }],
+    apple: [{ url: '/icons/tinku.svg', type: 'image/svg+xml' }],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#2F7A8C',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es-AR" className={`${andika.variable} ${inter.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <RegisterSW />
+      </body>
     </html>
   );
 }

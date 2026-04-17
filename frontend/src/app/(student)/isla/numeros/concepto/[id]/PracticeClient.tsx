@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { getNextExerciseAction, submitAttemptAction, closeSessionAction } from '@/lib/sessions/actions';
 import type { Exercise } from '@/types/database';
 import { cn } from '@/lib/utils/cn';
+import { CelebrationModal, type CelebrationPayload } from '@/components/celebration/CelebrationModal';
+import { strings } from '@/content/strings/es-AR';
 
 interface Props {
   conceptId: string;
@@ -38,6 +40,8 @@ export function PracticeClient({
   const [hintsUsed, setHintsUsed] = useState(0);
   const [mastered, setMastered] = useState(false);
   const [isPending, startTransition] = useTransition();
+  // Cola de celebraciones grandes (mastered + cada badge nuevo). Se van consumiendo una a una.
+  const [celebrations, setCelebrations] = useState<Array<Omit<CelebrationPayload, 'onClose'>>>([]);
   const startedAtRef = useRef<number>(Date.now());
 
   useEffect(() => {
@@ -70,6 +74,28 @@ export function PracticeClient({
         newBadges: res.newBadges,
       });
       setPKnown(res.pKnownNew);
+
+      // Armar cola de celebraciones grandes: concepto dominado → 1 por badge nuevo.
+      const c: Array<Omit<CelebrationPayload, 'onClose'>> = [];
+      if (res.justMastered) {
+        c.push({
+          variant: 'mastered',
+          title: strings.student.celebration.masteredTitle,
+          body: strings.student.celebration.masteredBody,
+          xpEarned: res.xpEarned,
+          ctaLabel: strings.student.celebration.masteredCta,
+        });
+      }
+      for (const b of res.newBadges) {
+        c.push({
+          variant: 'badge',
+          title: strings.student.celebration.badgeTitle,
+          body: strings.student.celebration.badgeBody,
+          badgeName: b.name_es,
+          ctaLabel: strings.student.celebration.badgeCta,
+        });
+      }
+      if (c.length > 0) setCelebrations(c);
     });
   };
 
@@ -90,6 +116,15 @@ export function PracticeClient({
   const onExit = async () => {
     await closeSessionAction(sessionId, 'user_exit');
     router.push('/isla/numeros');
+  };
+
+  const currentCelebration = celebrations[0];
+  const dismissCelebration = () => {
+    setCelebrations((prev) => prev.slice(1));
+    // Si la celebración era "mastered", avanzamos la vista al estado final tras consumir toda la cola
+    if (celebrations.length === 1 && feedback?.justMastered) {
+      setMastered(true);
+    }
   };
 
   if (mastered) {
@@ -258,6 +293,14 @@ export function PracticeClient({
           )}
         </section>
       </div>
+
+      {currentCelebration && (
+        <CelebrationModal
+          key={`${currentCelebration.variant}-${celebrations.length}`}
+          {...currentCelebration}
+          onClose={dismissCelebration}
+        />
+      )}
     </div>
   );
 }

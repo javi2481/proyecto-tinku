@@ -121,6 +121,17 @@ export async function studentLoginAction(
 
 export async function studentSignOutAction() {
   const supabase = await createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  const meta = (user?.user_metadata as { student_id?: string } | null) ?? {};
+  if (meta.student_id) {
+    const { logDataAccess } = await import('@/lib/audit/log');
+    await logDataAccess({
+      studentId: meta.student_id,
+      accessorAuthUid: user?.id ?? null,
+      accessType: 'signout',
+      accessTarget: 'auth.student_signout',
+    });
+  }
   await supabase.auth.signOut();
   redirect('/entrar');
 }

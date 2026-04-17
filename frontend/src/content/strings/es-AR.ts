@@ -169,6 +169,19 @@ export const strings = {
       comingSoonBody: 'Los primeros ejercicios están llegando. Volvé en un ratito.',
       back: '← Volver a las islas',
     },
+    celebration: {
+      masteredTitle: '¡Dominaste este concepto!',
+      masteredBody: 'Qué fiera. Ya conocés esto al dedillo.',
+      masteredCta: 'A otra actividad',
+      badgeTitle: '¡Conseguiste una medalla!',
+      badgeBody: 'Sumate la nueva a tu colección.',
+      badgeCta: '¡Dale!',
+      xpTitle: '¡Genial!',
+      xpCta: '¡Seguir!',
+    },
+    logros: {
+      navLink: 'Mis medallas',
+    },
   },
 } as const;
 

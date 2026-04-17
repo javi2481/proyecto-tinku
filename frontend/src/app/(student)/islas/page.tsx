@@ -59,15 +59,25 @@ export default async function IslasPage() {
             </p>
           </div>
         </div>
-        <form action={studentSignOutAction}>
-          <button
-            type="submit"
-            data-testid="islas-signout"
-            className="h-12 min-w-[48px] px-4 rounded-2xl bg-white/70 text-tinku-ink font-medium border-2 border-tinku-ink/10 hover:bg-white"
+        <div className="flex items-center gap-2">
+          <Link
+            href="/mis-logros"
+            data-testid="islas-logros-link"
+            className="h-12 min-w-[48px] px-4 rounded-2xl bg-white/70 text-tinku-ink font-medium border-2 border-tinku-ink/10 hover:bg-white flex items-center gap-2"
           >
-            {strings.student.islas.salir}
-          </button>
-        </form>
+            <span aria-hidden>🏅</span>
+            <span className="hidden sm:inline">{strings.student.logros.navLink}</span>
+          </Link>
+          <form action={studentSignOutAction}>
+            <button
+              type="submit"
+              data-testid="islas-signout"
+              className="h-12 min-w-[48px] px-4 rounded-2xl bg-white/70 text-tinku-ink font-medium border-2 border-tinku-ink/10 hover:bg-white"
+            >
+              {strings.student.islas.salir}
+            </button>
+          </form>
+        </div>
       </header>
 
       <section className="max-w-4xl mx-auto px-5 py-6 space-y-6">

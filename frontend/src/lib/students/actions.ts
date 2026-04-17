@@ -7,6 +7,7 @@ import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { createStudentSchema, updateStudentSchema } from '@/lib/schemas/student';
 import { logger } from '@/lib/observability/logger';
+import { logDataAccess } from '@/lib/audit/log';
 import { getStudentCapacity } from '@/lib/students/limits';
 
 export type StudentActionResult =
@@ -180,6 +181,14 @@ export async function updateStudentAction(
   }
 
   await logger.info('students.update', 'student updated', { studentId });
+  await logDataAccess({
+    studentId,
+    accessorId: user.id,
+    accessorAuthUid: user.id,
+    accessType: 'write',
+    accessTarget: 'students.update',
+    metadata: { fields: Object.keys(parsed.data) },
+  });
   revalidatePath('/dashboard');
   revalidatePath(`/students/${studentId}`);
   redirect(`/students/${studentId}`);
@@ -314,6 +323,13 @@ export async function cancelDeleteStudentAction(
   });
 
   await logger.info('students.delete_cancel', 'deletion cancelled', { studentId });
+  await logDataAccess({
+    studentId,
+    accessorId: user.id,
+    accessorAuthUid: user.id,
+    accessType: 'delete_cancel',
+    accessTarget: 'students.deletion_cancelled',
+  });
   revalidatePath('/dashboard');
   revalidatePath(`/students/${studentId}`);
   return { ok: true };

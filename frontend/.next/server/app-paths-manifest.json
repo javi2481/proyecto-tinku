@@ -1,9 +1,11 @@
 {
-  "/page": "app/page.js",
   "/entrar/page": "app/entrar/page.js",
+  "/page": "app/page.js",
+  "/webhooks/cron/anonymize/route": "app/webhooks/cron/anonymize/route.js",
+  "/(student)/isla/numeros/page": "app/(student)/isla/numeros/page.js",
+  "/(student)/isla/numeros/concepto/[id]/page": "app/(student)/isla/numeros/concepto/[id]/page.js",
   "/(auth)/login/page": "app/(auth)/login/page.js",
   "/(parent)/dashboard/page": "app/(parent)/dashboard/page.js",
   "/(student)/islas/page": "app/(student)/islas/page.js",
-  "/(student)/isla/numeros/page": "app/(student)/isla/numeros/page.js",
-  "/(student)/isla/numeros/concepto/[id]/page": "app/(student)/isla/numeros/concepto/[id]/page.js"
+  "/(student)/mis-logros/page": "app/(student)/mis-logros/page.js"
 }
