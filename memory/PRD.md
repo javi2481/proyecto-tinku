@@ -102,7 +102,40 @@ Tutor IA Ari (Ola 4), MercadoPago real, portal docente, push, offline avanzado, 
 - Email stub = `sendEmail()` loguea el link a stdout + `app_logs` row. Reemplazable a Resend sin tocar llamadores.
 - Rate limits: 10 signups/hora por IP, 8 logins/10min por IP, 3 resends/10min por user.
 
-### ⏳ Fase 3 — Gestión de alumnos + consentimiento parental (próxima)
+### ✅ Fase 3 — Gestión de alumnos + consentimiento parental (completada 2026-01)
+
+**Construido:**
+- Migrations aplicadas completas (0001-0003). Sin migrations nuevas en Fase 3.
+- `src/lib/schemas/student.ts` — Zod `createStudentSchema` (requiere `consent_accepted='true'` literal), `updateStudentSchema`.
+- `src/lib/students/avatars.ts` — 6 avatares emoji (zorro/perro/gato/panda/león/rana) con colores de fondo.
+- `src/lib/students/limits.ts` — `getStudentCapacity(parentId)`. PLAN_LIMITS free=1, premium_active=3.
+- `src/lib/students/actions.ts`:
+  - `createStudentAction` — service_role: INSERT atómico en `students` + `parental_consents` (event 'granted' con IP/UA + consent_text_version=v1) + `data_access_log`. Genera login_code único vía RPC `generate_login_code` con retry.
+  - `updateStudentAction` — vía cliente con RLS (no necesita service_role).
+  - `regenerateLoginCodeAction` — service_role + ownership check.
+  - `requestDeleteStudentAction` — marca `deletion_requested_at` + `consent_revoked_at` + event 'revoked' en parental_consents.
+  - `cancelDeleteStudentAction` — limpia ambos timestamps + event 'reconfirmed'.
+- `src/lib/legal/ConsentTextV1.tsx` — texto legal v1 como componente React, renderizable inline en el form.
+- Páginas:
+  - `/dashboard` rediseñada: lista de hijos con avatar + código + XP + streak + badge 'baja pendiente' si corresponde. Capacity label "X / Y hijos".
+  - `/students/new` — page con check de capacity (muestra `limit-reached` si no puede) + `NewStudentForm`. Submit deshabilitado hasta consent.
+  - `/students/[id]` — detail con avatar grande, datos, **código login en monospace 3xl** seleccionable, acciones.
+  - `/students/[id]/edit` — form de edición (first_name, grade, avatar; no birth_year).
+  - `StudentActions` client component: copiar código, regen (con confirm), edit link, request-delete (con confirm), cancel-deletion.
+- `/not-found.tsx` — 404 localizado en rioplatense con brújula 🧭.
+
+**Testing (iteration_2.json — 100% success):**
+- 22 flows testeados: dashboard vacío, creación de alumno con consent, avatar picker, submit bloqueado sin consent, detail con login code, regeneración, copy button, edit completo, request-delete con grace, cancel deletion, límite Free = 1, 404.
+- Seed de test: alumno "Mateo E." (grade_2, birth 2017, avatar_03) con login_code regenerado durante los tests. Está al límite del plan Free.
+- 0 fallos. 1 issue cosmético de 404 resuelto.
+
+**Decisiones de UX notables:**
+- Consent rendered INLINE scrolleable (no modal) — mejor para mobile + accesibilidad.
+- login_code mostrado grande + monospace + seleccionable para facilitar lectura al padre.
+- Deletion con grace period UX-explícita: banner naranja en detail + texto "baja pendiente" en dashboard + botón cancelar visible siempre.
+- Avatares con emoji (OK para contenido infantil, no icons).
+
+### ⏳ Fase 4 — Auth del alumno (próxima)
 ### ⏳ Fase 4 — Auth del alumno (anonymous sign-in + login_code)
 ### ⏳ Fase 5 — Experiencia del alumno (islas → ejercicio)
 ### ⏳ Fase 6 — Motor adaptativo heurístico

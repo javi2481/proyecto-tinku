@@ -1,8 +1,7 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
   "/(auth)/signup/page": "app/(auth)/signup/page.js",
   "/(parent)/dashboard/page": "app/(parent)/dashboard/page.js",
   "/(auth)/login/page": "app/(auth)/login/page.js",
-  "/(parent)/students/new/page": "app/(parent)/students/new/page.js",
-  "/(parent)/students/[id]/page": "app/(parent)/students/[id]/page.js",
-  "/(parent)/students/[id]/edit/page": "app/(parent)/students/[id]/edit/page.js"
+  "/(parent)/students/[id]/page": "app/(parent)/students/[id]/page.js"
 }
