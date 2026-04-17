@@ -1,7 +1,18 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { createServerSupabase } from '@/lib/supabase/server';
 import { strings } from '@/content/strings/es-AR';
 
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+export const dynamic = 'force-dynamic';
+
+export default async function AuthLayout({ children }: { children: React.ReactNode }) {
+  // Defense in depth: además del middleware, el layout redirige a /dashboard
+  // si hay sesión. Cubre casos edge donde getUser() en middleware pueda
+  // devolver null por cookies chunked o race conditions de @supabase/ssr.
+  const supabase = await createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) redirect('/dashboard');
+
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       <aside className="hidden lg:flex flex-col justify-between bg-tinku-ink text-white p-12 relative overflow-hidden">

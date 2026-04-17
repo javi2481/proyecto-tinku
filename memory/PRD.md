@@ -67,9 +67,42 @@ Tutor IA Ari (Ola 4), MercadoPago real, portal docente, push, offline avanzado, 
 - `xp_rules` tiene 12 filas (3 difficulties × 4 outcomes).
 - 5 badges seed en `badges_catalog`.
 
-### ⏳ Fase 1 — Tipos generados de Supabase + /content/strings
-### ⏳ Fase 2 — Auth del padre (signup + doble opt-in con Resend STUB + login)
-### ⏳ Fase 3 — Gestión de alumnos + consentimiento parental
+### ✅ Fase 1+2 — Types + strings + legal + Auth del padre (completada 2026-01)
+
+**Fase 1:**
+- `src/types/database.ts` — types TS hand-rolled de las 17 tablas.
+- `src/content/strings/es-AR.ts` — fuente única de texto UI en rioplatense.
+- `src/content/legal/consent-v1.md` — borrador completo de texto legal de consentimiento parental (**PENDIENTE review de Javier**).
+- `src/lib/observability/logger.ts` — logger estructurado → `app_logs` (reemplaza Sentry Ola 1).
+- `src/lib/email/stub.ts` — email stub. Loguea link completo a stdout + app_logs.
+- `src/lib/schemas/auth.ts` — Zod schemas para signup/login.
+- `src/lib/utils/rate-limit.ts` — rate-limit in-memory.
+- `src/lib/utils/cn.ts` — helper className.
+
+**Fase 2 (Auth del padre):**
+- Migration `0003_auth_trigger.sql` aplicada — trigger `handle_new_user` crea profile + subscription(free) al crear auth.users. Skippea alumnos (role=student en metadata).
+- Server Actions `src/lib/auth/actions.ts`: `signupAction`, `loginAction`, `verifyEmailToken`, `resendVerifyAction`, `signOutAction`.
+- `middleware.ts` — refresh de cookies Supabase + protección /dashboard /students /account.
+- Páginas:
+  - `/` landing marketing con redirect si autenticado.
+  - `(auth)/signup` + SignupForm client con `useFormState`.
+  - `(auth)/login` + LoginForm client.
+  - `(auth)/verify-email?token=X` — consume token del stub.
+  - `(parent)/layout.tsx` con guard server-side + botón Salir.
+  - `(parent)/dashboard` con VerifyBanner + plan label + CTA deshabilitado.
+- `next.config.mjs` actualizado con `allowedOrigins` para Server Actions en preview de Emergent (agregado por testing agent).
+
+**Testing (iteration_1.json — 90% success):**
+- 15 tests PASS: landing, signup happy path, validación cliente, email duplicado, dashboard con banner, plan gratuito, signout, login válido/inválido, rate limit implícito, redirects de guard.
+- 1 bug FIXED: middleware no redirigía usuarios logueados desde /signup y /login → agregado check en layout `(auth)` (defense in depth con `supabase.auth.getUser()` + `redirect('/dashboard')`). Verificado manualmente con Playwright: ambas navegaciones ahora redirigen correctamente.
+
+**Decisiones de implementación:**
+- Usamos `admin.createUser({email_confirm:true})` con service_role para bypassear la confirmación built-in de Supabase y gestionar nuestro propio double opt-in en `email_verifications`.
+- Trigger Postgres crea profile + subscription atómico con auth.users (canónico Supabase).
+- Email stub = `sendEmail()` loguea el link a stdout + `app_logs` row. Reemplazable a Resend sin tocar llamadores.
+- Rate limits: 10 signups/hora por IP, 8 logins/10min por IP, 3 resends/10min por user.
+
+### ⏳ Fase 3 — Gestión de alumnos + consentimiento parental (próxima)
 ### ⏳ Fase 4 — Auth del alumno (anonymous sign-in + login_code)
 ### ⏳ Fase 5 — Experiencia del alumno (islas → ejercicio)
 ### ⏳ Fase 6 — Motor adaptativo heurístico
