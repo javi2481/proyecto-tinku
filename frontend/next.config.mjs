@@ -8,6 +8,12 @@ const nextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb',
+      // Allow Server Actions from proxy origins (Emergent preview environment)
+      allowedOrigins: [
+        'regla-clara.preview.emergentagent.com',
+        'regla-clara.cluster-0.preview.emergentcf.cloud',
+        'localhost:3000',
+      ],
     },
   },
 };

@@ -1,0 +1,85 @@
+{
+  "summary": "Completed frontend testing of Tinkú auth flows (Fase 2). Fixed critical Server Actions origin mismatch error. Most flows working correctly. Found 1 middleware bug.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {
+        "flow": "Middleware auth redirect",
+        "issue": "Logged-in users can access /signup and /login pages directly (should redirect to /dashboard). Landing page (/) redirect works correctly.",
+        "affected_selectors": ["[data-testid='signup-page']", "[data-testid='login-page']"],
+        "priority": "MEDIUM"
+      }
+    ],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/test_reports/iteration_1.json"],
+  "action_items": [
+    "FIX MIDDLEWARE BUG: Logged-in users can access /signup and /login pages directly instead of being redirected to /dashboard. The middleware code looks correct but getUser() may be returning null due to cookie handling issues in the proxy environment. Consider adding logging to middleware to debug."
+  ],
+  "critical_code_review_comments": [
+    "FIXED: Added allowedOrigins to next.config.mjs serverActions config to fix 'Invalid Server Actions request' error caused by x-forwarded-host/origin mismatch in Emergent preview environment"
+  ],
+  "updated_files": ["/app/frontend/next.config.mjs", "/app/memory/test_credentials.md"],
+  "success_rate": {
+    "backend": "N/A (frontend-only testing)",
+    "frontend": "90%"
+  },
+  "test_credentials": {
+    "email": "tinku-test-1776447878@example.com",
+    "password": "TinkuTest123",
+    "full_name": "Test Padre",
+    "user_id": "6d9f8261-5966-45b8-b69f-3bf5531185ee"
+  },
+  "seed_data_creation": "Created test user via signup flow",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Test user created with email tinku-test-1776447878@example.com. Email NOT verified (double opt-in pending). Middleware redirect bug exists for /signup and /login pages when user is logged in. All other auth flows working correctly.",
+  "tests_passed": [
+    "Landing page renders with hero-signup, hero-login, header-login testids",
+    "Signup form has all required testids (signup-fullname, signup-email, signup-password, signup-submit)",
+    "Signup validation errors display correctly (password too short shows err-password)",
+    "Successful signup redirects to /dashboard",
+    "Dashboard shows verify-banner for unverified email",
+    "Dashboard shows plan-label with 'Plan gratuito'",
+    "Dashboard shows disabled add-student-btn with 'próximo' text",
+    "Signout button (signout-btn) works and redirects to /login",
+    "Resend verification (verify-resend-btn) shows verify-resend-ok with 'Listo, volvemos a mandarlo.'",
+    "Login form has all required testids (login-email, login-password, login-submit)",
+    "Login with invalid credentials shows login-error with 'El email o la contraseña no coinciden.'",
+    "Login with valid credentials redirects to /dashboard",
+    "Signup with duplicate email shows signup-error with 'Este email ya tiene una cuenta. ¿Querés entrar?'",
+    "Unauthenticated user visiting /dashboard is redirected to /login",
+    "Logged-in user visiting / (landing) is redirected to /dashboard"
+  ],
+  "tests_failed": [
+    "Middleware: Logged-in user visiting /signup is NOT redirected to /dashboard (BUG)",
+    "Middleware: Logged-in user visiting /login is NOT redirected to /dashboard (BUG)"
+  ],
+  "mocked_apis": {
+    "has_mocked_apis": true,
+    "mocked_apis_list": ["Resend email delivery (stub → app_logs) - intentional for Ola 1"]
+  },
+  "rca_of_the_issue": {
+    "server_actions_error": {
+      "issue": "Error: Invalid Server Actions request - x-forwarded-host header mismatch",
+      "root_cause": "Next.js Server Actions security check fails when origin header (regla-clara.cluster-0.preview.emergentcf.cloud) doesn't match x-forwarded-host header (regla-clara.preview.emergentagent.com) in Emergent preview environment",
+      "fix_applied": "Added allowedOrigins array to next.config.mjs serverActions.experimental config with both preview domains and localhost",
+      "status": "FIXED"
+    },
+    "middleware_redirect_bug": {
+      "issue": "Logged-in users can access /signup and /login pages directly",
+      "root_cause": "Suspected: Supabase SSR getUser() may be returning null due to cookie handling issues when navigating directly to auth pages in proxy environment. The middleware code logic is correct.",
+      "reproduction_steps": [
+        "1. Login with valid credentials",
+        "2. Navigate directly to /signup or /login via URL",
+        "3. Expected: Redirect to /dashboard",
+        "4. Actual: Auth page is displayed"
+      ],
+      "status": "NOT FIXED - needs main agent investigation"
+    }
+  }
+}

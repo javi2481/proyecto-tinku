@@ -1,72 +1,59 @@
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { createServerSupabase } from '@/lib/supabase/server';
+import { strings } from '@/content/strings/es-AR';
 
-/**
- * Smoke test de Fase 0 — valida conexión a Supabase desde Server Component.
- * Consulta xp_rules (tabla pública legible por authenticated; acá vamos como anon
- * pero xp_rules_read es TO authenticated — así que el count puede ser 0 para anon
- * y eso está bien, lo importante es que no haya error de conexión).
- */
-export default async function HomePage() {
-  let connection: 'ok' | 'error' = 'ok';
-  let errorMessage: string | null = null;
-  let xpRulesCount = 0;
+export const dynamic = 'force-dynamic';
 
-  try {
-    const supabase = await createServerSupabase();
-    const { count, error } = await supabase
-      .from('xp_rules')
-      .select('*', { count: 'exact', head: true });
-    if (error) {
-      connection = 'error';
-      errorMessage = error.message;
-    } else {
-      xpRulesCount = count ?? 0;
-    }
-  } catch (e) {
-    connection = 'error';
-    errorMessage = e instanceof Error ? e.message : String(e);
-  }
+export default async function LandingPage() {
+  const supabase = await createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) redirect('/dashboard');
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-8">
-      <div
-        data-testid="smoke-test-card"
-        className="max-w-lg w-full rounded-2xl border border-tinku-sea/20 bg-white p-8 shadow-sm"
-      >
-        <h1 className="text-2xl font-semibold text-tinku-ink mb-2">Tinkú — Ola 1</h1>
-        <p className="text-sm text-tinku-ink/70 mb-6">
-          Setup de Fase 0. Validación de stack.
+    <main className="min-h-screen bg-gradient-to-br from-tinku-mist via-white to-tinku-sand/30">
+      <header className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+        <span className="font-semibold text-tinku-ink text-lg">{strings.common.appName}</span>
+        <Link
+          href="/login"
+          data-testid="header-login"
+          className="text-sm text-tinku-ink/70 hover:text-tinku-ink"
+        >
+          {strings.marketing.ctaLogin}
+        </Link>
+      </header>
+
+      <section className="max-w-4xl mx-auto px-6 py-16 sm:py-24 text-center space-y-8">
+        <p className="text-xs uppercase tracking-widest text-tinku-sea/80">
+          {strings.common.tagline}
         </p>
-
-        <dl className="space-y-3 text-sm">
-          <div className="flex justify-between">
-            <dt className="text-tinku-ink/60">Next.js</dt>
-            <dd data-testid="status-nextjs" className="font-medium text-tinku-leaf">OK</dd>
-          </div>
-          <div className="flex justify-between">
-            <dt className="text-tinku-ink/60">Tailwind</dt>
-            <dd data-testid="status-tailwind" className="font-medium text-tinku-leaf">OK</dd>
-          </div>
-          <div className="flex justify-between">
-            <dt className="text-tinku-ink/60">Supabase</dt>
-            <dd
-              data-testid="status-supabase"
-              className={connection === 'ok' ? 'font-medium text-tinku-leaf' : 'font-medium text-tinku-warn'}
-            >
-              {connection === 'ok' ? `OK (xp_rules visible: ${xpRulesCount})` : 'ERROR'}
-            </dd>
-          </div>
-        </dl>
-
-        {errorMessage && (
-          <p
-            data-testid="supabase-error"
-            className="mt-4 text-xs text-tinku-warn bg-tinku-warn/10 p-3 rounded-lg break-words"
+        <h1 className="text-4xl sm:text-5xl font-semibold text-tinku-ink leading-tight">
+          {strings.marketing.heroTitle}
+        </h1>
+        <p className="text-lg text-tinku-ink/70 max-w-2xl mx-auto">
+          {strings.marketing.heroSub}
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+          <Link
+            href="/signup"
+            data-testid="hero-signup"
+            className="inline-flex items-center justify-center h-12 px-6 rounded-xl bg-tinku-sea text-white font-medium hover:bg-tinku-sea/90 transition-colors"
           >
-            {errorMessage}
-          </p>
-        )}
-      </div>
+            {strings.marketing.ctaSignup}
+          </Link>
+          <Link
+            href="/login"
+            data-testid="hero-login"
+            className="inline-flex items-center justify-center h-12 px-6 rounded-xl border border-tinku-ink/15 text-tinku-ink font-medium hover:bg-white"
+          >
+            {strings.marketing.ctaLogin}
+          </Link>
+        </div>
+      </section>
+
+      <footer className="max-w-6xl mx-auto px-6 py-8 text-xs text-tinku-ink/40 text-center">
+        Para chicos argentinos de 6 a 12. Contenido alineado al NAP.
+      </footer>
     </main>
   );
 }
