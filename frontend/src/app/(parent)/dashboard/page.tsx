@@ -5,6 +5,7 @@ import { getAvatar } from '@/lib/students/avatars';
 import { strings } from '@/content/strings/es-AR';
 import type { GradeLevel } from '@/types/database';
 import { VerifyBanner } from './VerifyBanner';
+import { isAdminEmail } from '@/lib/auth/admin';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,6 +63,17 @@ export default async function DashboardPage() {
             {capacity.current} / {capacity.limit} hijo{capacity.limit === 1 ? '' : 's'}
           </span>
         </p>
+        {isAdminEmail(user?.email) && (
+          <p className="pt-1">
+            <Link
+              href="/review-exercises"
+              data-testid="admin-review-link"
+              className="text-xs font-medium text-tinku-sea hover:underline"
+            >
+              🧑‍🏫 Revisión pedagógica (admin)
+            </Link>
+          </p>
+        )}
       </header>
 
       <section className="rounded-2xl border border-tinku-ink/10 bg-white p-6 sm:p-8 space-y-4">

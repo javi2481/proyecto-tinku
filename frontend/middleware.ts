@@ -134,6 +134,7 @@ export const config = {
     '/dashboard/:path*',
     '/students/:path*',
     '/account/:path*',
+    '/review-exercises/:path*',
     '/islas/:path*',
     '/isla/:path*',
   ],

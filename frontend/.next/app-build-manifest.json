@@ -1,9 +1,14 @@
 {
   "pages": {
-    "/entrar/page": [
+    "/(auth)/login/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/entrar/page.js"
+      "static/chunks/app/(auth)/login/page.js"
+    ],
+    "/(auth)/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(auth)/layout.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
@@ -16,25 +21,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/not-found.js"
     ],
-    "/(student)/islas/page": [
+    "/(parent)/dashboard/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(student)/islas/page.js"
+      "static/chunks/app/(parent)/dashboard/page.js"
     ],
-    "/(student)/layout": [
+    "/(parent)/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(student)/layout.js"
+      "static/chunks/app/(parent)/layout.js"
     ],
-    "/(student)/isla/numeros/page": [
+    "/(parent)/review-exercises/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(student)/isla/numeros/page.js"
-    ],
-    "/(student)/isla/numeros/concepto/[id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(student)/isla/numeros/concepto/[id]/page.js"
+      "static/chunks/app/(parent)/review-exercises/page.js"
     ]
   }
 }

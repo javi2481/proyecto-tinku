@@ -276,6 +276,36 @@ Tutor IA Ari (Ola 4), MercadoPago real, portal docente, push, offline avanzado, 
 ### ✅ Fase 7 — Auditoría + PWA + anonimización (completada 2026-04)
 
 **Auditoría centralizada:**
+
+### ✅ Sprint P1 — 2026-04-17 parte 2 (Admin review UI)
+
+**Problema resuelto:** los 63 ejercicios seedeados por template estaban marcados `approved` sin review humano real. Para que Javier pueda revisarlos eficientemente sin romper la experiencia de Mateo (el engine filtra por `pedagogical_review_status='approved'`).
+
+**Admin review UI:**
+- `/review-exercises` (bajo `(parent)` route group, protegido por email allow-list).
+- `lib/auth/admin.ts` — `isAdminEmail(email)` compara contra env var `ADMIN_EMAILS` (comma-separated). Fallback dev: `tinku-test-1776447878@example.com`.
+- Middleware: `/review-exercises/:path*` agregado al matcher + al bloque `isParentArea`.
+- Dashboard del padre muestra link "🧑‍🏫 Revisión pedagógica (admin)" solo si el user es admin.
+
+**Funcionalidad:**
+- Lista los ejercicios activos agrupados por concepto, ordenados easy→medium→hard.
+- Por ejercicio muestra: status chip, difficulty, tipo (MCQ/Numérico), prompt, respuesta correcta resaltada, opciones o placeholder, reviewer + fecha si ya fue revisado.
+- Acciones por ejercicio: **Aprobar**, **Revisar** (marca `needs_revision`), **Rechazar** (cambia status + soft-delete → excluido del engine).
+- Textarea expandible para nota pedagógica (persistida en `pedagogical_notes`).
+- **Bulk approve por concepto** — botón "Aprobar los X pendientes" cuando hay pending en ese concepto.
+- **Reset global** — "Marcar como sin revisar los que nunca tuvieron review humano" (filtra `pedagogical_reviewer_id IS NULL`).
+- Filter tabs: todos / sin revisar / aprobado / necesita revisión / rechazado con counts.
+- Toast flash en cada acción (non-blocking).
+
+**Server actions (`lib/review/actions.ts`):**
+- `reviewExerciseAction(id, status, notes)` — requiere admin; setea `pedagogical_review_status/reviewer_id/reviewed_at/notes`; si status=rejected también pone `deleted_at`.
+- `bulkApproveByConceptAction(conceptId, currentStatus='pending')` — aprueba todos los pending (o el status que se pase) de un concepto en una sola query.
+- `resetUnreviewedToPendingAction()` — usado para separar los 63 generados automáticamente de los manualmente curados.
+
+**Testing (self-test Playwright directo):**
+- 5 flows verificados en 1 screenshot run: login admin → link visible en dashboard → review page renderiza → reset (63 → 63 pendientes) → aprobar individual (+1) → bulk approve concepto (+20) → marcar revisión (+1) → rechazar (soft-delete → desaparece del listado). TypeScript limpio.
+
+**Archivo /app/memory/RULES.md creado** — regla innegociable "no gastar créditos/tokens" grabada permanentemente para todos los agentes (main + forks) del proyecto. Incluye también reglas de idioma, stack, UX infantil, y compliance legal.
 - `src/lib/audit/log.ts` — helper `logDataAccess({ studentId, accessType, accessTarget, metadata, accessorId, accessorAuthUid })`. Falla silenciosamente a `app_logs` si `data_access_log` insert falla. Extrae IP + user-agent de headers automáticamente.
 - Integrado en: `submitAttemptAction` (attempts.submit con xp/outcome/mastered/badges), `updateStudentAction`, `regenerateLoginCodeAction`, `cancelDeleteStudentAction`, `studentSignOutAction`. Actions preexistentes (create/delete/login) conservan sus inserts inline (ya eran explícitos y auditados desde Fase 3).
 
