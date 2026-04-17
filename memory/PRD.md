@@ -135,7 +135,40 @@ Tutor IA Ari (Ola 4), MercadoPago real, portal docente, push, offline avanzado, 
 - Deletion con grace period UX-explícita: banner naranja en detail + texto "baja pendiente" en dashboard + botón cancelar visible siempre.
 - Avatares con emoji (OK para contenido infantil, no icons).
 
-### ⏳ Fase 4 — Auth del alumno (próxima)
+### ✅ Fase 4 — Auth del alumno (completada 2026-01)
+
+**Construido:**
+- Server Action `studentLoginAction` en `src/lib/auth/student-actions.ts`: valida formato + rate-limit IP (5/10min) + lookup del student por `login_code` + consent no revocado.
+- **Workaround sintético para anonymous sign-ins** (estaban disabled en el proyecto y no se pueden activar via Management API sin PAT):
+  - Email derivado: `student-{student.id}@tinku.local` (no routeable)
+  - Password aleatoria 32 bytes rotada en cada login
+  - Primera vez: `admin.createUser({email, password, email_confirm:true, user_metadata:{role:'student',...}})`
+  - Logins siguientes: `admin.updateUserById(authUserId, {password: newRandom, user_metadata})`
+  - Luego `signInWithPassword(email, password)` desde server client setea cookie
+  - El trigger `handle_new_user` detecta `role='student'` y skippea profile/subscription
+  - Equivalente funcional a anonymous sign-ins para el producto; cambia el mecanismo de auth interno sin tocar schema ni RLS.
+- Audit log en `data_access_log` por cada student_login.
+- `middleware.ts` actualizado con matcher explícito (el pattern con negative lookahead no enrutaba /isla/:path) + rutado por role en JWT metadata.
+- Layout `(student)/layout.tsx`: server-side guard (user + role=='student') + wrapper `.student-scope` con Andika.
+- `(parent)/layout.tsx` actualizado: si role==student → redirect a /islas (cross-role defense in depth).
+- Root `layout.tsx` carga Andika + Inter via `next/font/google` con CSS vars `--font-andika` y `--font-parent`.
+- Páginas:
+  - `/entrar` (público, fuera de route groups): input grande font-mono uppercase con pattern, maxLength=6, autocapitalize=characters. Submit action con error rioplatense cariñoso si falla.
+  - `(student)/islas/page.tsx`: saludo con avatar + XP + streak, grid de 5 islas. Solo `math` activa (link a `/isla/numeros`), 4 "Próximamente" grayscale.
+  - `(student)/isla/numeros/page.tsx`: placeholder Fase 5 con back link.
+
+**Testing:**
+- Iteration 3 testing_agent_v3: 10/11 PASS + 1 blocker (anon sign-ins OFF). Todos los test passed cubrían: UI de /entrar, validación de formato, error de código inexistente, guards de auth, cross-role parent→student.
+- Validación del workaround sintético con Playwright directo (6/6 PASS): login con código 74RTPM → /islas → island-math → /isla/numeros → back → cross-role guard → signout. Sin llamar de nuevo al testing_agent por economía.
+
+**Dos bugs fixeados durante Fase 4:**
+- `/entrar` estaba adentro del `(student)` group → el layout guard lo redirigía a sí mismo → loop infinito. Movido a `/app/entrar/` (sin group).
+- Matcher middleware con negative lookahead `/((?!_next/...).*)` no atrapaba `/isla/numeros`. Reemplazado por matchers explícitos. Además, `/isla/numeros` movido adentro de `(student)` group para que el layout guard actúe como defense in depth.
+
+**Decisión arquitectural notable:**
+- **Auth del alumno via synthetic email + rotating password** en lugar de anonymous sign-ins. Razón: el toggle de "Anonymous Sign-Ins" en Supabase Dashboard estaba OFF y la Management API para activarlo requiere Personal Access Token (no proyecto-scoped). El workaround es funcionalmente equivalente y produce el mismo resultado (auth.users con JWT que el cliente usa normalmente). Cuando se active el toggle oficial en algún momento, se puede volver al patrón canónico cambiando 30 líneas en `studentLoginAction`.
+
+### ⏳ Fase 5 — Experiencia del alumno (próxima)
 ### ⏳ Fase 4 — Auth del alumno (anonymous sign-in + login_code)
 ### ⏳ Fase 5 — Experiencia del alumno (islas → ejercicio)
 ### ⏳ Fase 6 — Motor adaptativo heurístico
