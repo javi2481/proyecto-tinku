@@ -40,6 +40,16 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(parent)/layout.js"
+    ],
+    "/(parent)/students/new/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(parent)/students/new/page.js"
+    ],
+    "/(parent)/students/[id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(parent)/students/[id]/page.js"
     ]
   }
 }
