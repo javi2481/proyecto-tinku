@@ -28,6 +28,8 @@ Javier lo dijo literal: *"la regla innegociable respecto a los creditos/tokens..
 
 10. **Commits / Save to GitHub son del usuario:** Si pide guardar, indicarle el botón "Save to Github". No tratar de hacerlo yo.
 
+11. **Toda sugerencia va al ROADMAP.md.** Si al finalizar una tarea sugiero un "potential improvement" (o cualquier idea nueva de feature), **antes de devolver el finish** tengo que plasmarla en `/app/ROADMAP.md` en la sección P3 (o la que corresponda). Nunca dejar sugerencias flotando solo en el chat — se pierden.
+
 ### Excepciones aceptables
 - Testing agent después de Fase completa (≥5 features o compliance legal).
 - `web_search_tool_v2` cuando tengo duda real sobre API actual post-knowledge-cutoff.

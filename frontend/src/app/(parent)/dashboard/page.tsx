@@ -7,6 +7,7 @@ import type { GradeLevel } from '@/types/database';
 import { VerifyBanner } from './VerifyBanner';
 import { isAdminEmail } from '@/lib/auth/admin';
 import { StudentActivityCard } from './StudentActivityCard';
+import { OnboardingTour } from './OnboardingTour';
 
 export const dynamic = 'force-dynamic';
 
@@ -76,6 +77,8 @@ export default async function DashboardPage() {
           </p>
         )}
       </header>
+
+      <OnboardingTour hasStudents={hasStudents} />
 
       <section className="rounded-2xl border border-tinku-ink/10 bg-white p-6 sm:p-8 space-y-4">
         <div className="flex items-center justify-between">

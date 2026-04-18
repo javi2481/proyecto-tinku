@@ -21,6 +21,7 @@ Lista completa en `CHANGELOG.md`. Resumen:
 - Admin review UI para curar ejercicios.
 - PWA básico + cron anonimización + auditoría central.
 - **Dashboard del padre con progreso detallado por hijo + actividad card con botón WhatsApp**.
+- **Landing page pública + Privacidad + Términos + Onboarding del padre.**
 
 ---
 
@@ -50,11 +51,11 @@ Ninguno activo. El producto es **funcionalmente usable** hoy con Paulina.
 - [ ] `ADMIN_EMAILS` en env de producción (hoy tiene solo el test user).
 - [ ] **Sentry** real para errores frontend + server actions (hoy stub en `app_logs`).
 - [ ] **PostHog** real para analytics event-level (hoy stub en `app_logs`).
-- [ ] Landing page `/` — hoy está vacía. Copy rioplatense + CTA al signup.
-- [ ] Onboarding del padre (tour de 3 pasos tras el signup) — hoy tira al dashboard sin contexto.
+- [x] ~~Landing page `/`~~ — **shippeado 2026-04-18** (hero + 3 beneficios + 3 pasos + footer legal).
+- [x] ~~Onboarding del padre (tour de 3 pasos)~~ — **shippeado 2026-04-18** (4 pasos + localStorage).
 
 ### Compliance
-- [ ] Publicar `/content/legal/privacy-v1.md` y `/content/legal/terms-v1.md` como páginas públicas (hoy solo el consentimiento).
+- [x] ~~Publicar `/privacidad` y `/terminos` como páginas públicas~~ — **shippeado 2026-04-18** (v1 rioplatense, cumple Ley 26.061 + 25.326).
 - [ ] Export de datos del alumno ("Descargar mis datos") en formato JSON.
 
 ---
@@ -82,6 +83,11 @@ Ninguno activo. El producto es **funcionalmente usable** hoy con Paulina.
 ---
 
 ## 🔵 P3 — Ola 3+ (backlog a futuro)
+
+### Ideas sugeridas por el agente (pendientes de tu OK)
+- [ ] **"Momento de ayuda del grande"** — cuando el alumno falla 2 veces seguidas el mismo concepto, aparece un botón discreto "¿Te ayuda un grande?". Si lo toca, se manda una alerta al dashboard del padre tipo _"Paulina está trabada con restas — 3 minutos de tu tiempo vuelven esto al carril"_. Humaniza la tecnología, hace al padre participante (no espectador). La IA no reemplaza una buena explicación del papá/mamá en el momento justo. ~1-2h.
+- [ ] **Compartir medallas por WhatsApp** — en `/mis-logros`, botón "Compartir medallas" que genera un PNG con el avatar del chico + medallas ganadas + XP + un mensaje tipo *"Paulina ya domina sumas con reagrupamiento 🌟"*, listo para enviar al abuelo/abuela. Loop viral: el chico presume + el padre recibe reconocimiento por invertir en educación. Bajísimo costo (canvas + Web Share API), alto impacto en retención y referral orgánico. ~1h.
+- [ ] **`quality_score` 1-5 por ejercicio** — después de revisar los 122 ejercicios, agregar un campo en `exercises` para calificar cuáles son "excelentes" vs "aceptables". El engine los prioriza proporcionalmente. Te da control pedagógico fino sin re-escribir. ~30 min.
 
 ### Producto
 - [ ] **Isla de las Ciencias** (Naturales + Sociales).

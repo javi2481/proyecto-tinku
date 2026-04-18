@@ -10,6 +10,41 @@ Nada pendiente sin shippear. Si arranca un sprint nuevo, acá va.
 
 ---
 
+## [0.10.0] — 2026-04-18 · Vidriera pública (landing + legal + onboarding)
+
+### Added
+- **Landing page nueva en `/`**:
+  - Hero con título + subtítulo + 2 CTAs (Crear cuenta / Soy chico).
+  - Sección "Tres cosas que hacen distinto a Tinkú" (Motor adaptativo / Privacidad primero / Vos ves su progreso).
+  - Sección "Empezá en 3 minutos" (pasos numerados: Creás cuenta / Creás hijo / Le das el código).
+  - Card de filosofía con cita "Un minuto en Tinkú vale más que 20 copiando del pizarrón".
+  - Footer con links a Privacidad, Términos, Ingresar, Crear cuenta.
+  - Copy 100% rioplatense + cumple principios del PRD.
+- **Página pública `/privacidad`**:
+  - Política de Privacidad v1 — Versión versionada con `LAST_UPDATE`.
+  - Resumen "Lo importante en 30 segundos" al tope.
+  - Secciones: Quiénes somos · Qué datos · Para qué usamos · Lo que NO hacemos · Proveedores · Tus derechos · Retención · Cambios · Contacto.
+  - Cumple Ley 26.061 + 25.326 (requisito para mantener Google OAuth activo).
+- **Página pública `/terminos`**:
+  - Términos y Condiciones v1 en 10 secciones: quién puede usar, tu cuenta, consentimiento parental, uso aceptable, contenido, modificaciones, garantías, privacidad, ley aplicable, contacto.
+  - Copy rioplatense claro (no legalese).
+- **Onboarding del padre post-signup** (`OnboardingTour.tsx`):
+  - Overlay de 4 pasos cuando el padre entra al dashboard **sin hijos creados**.
+  - Pasos: Bienvenida → Crear hijo → Compartir código → Ver progreso.
+  - Persistido en `localStorage['tinku-onboarding-dismissed-v1']` (sin migration).
+  - Auto-oculto si ya hay ≥1 hijo creado O si ya fue dismisseado.
+  - Botón "Saltar" en el top + progress bar de 4 pasos + link directo a `/students/new`.
+
+### Files
+- `frontend/src/app/page.tsx` (reescrito — landing completa)
+- `frontend/src/app/privacidad/page.tsx` · `terminos/page.tsx`
+- `frontend/src/app/(parent)/dashboard/OnboardingTour.tsx`
+
+### Testing
+- Smoke test E2E con Playwright: landing, privacy, terms renderizan OK. Tour oculto correcto para users con hijos.
+
+---
+
 ## [0.9.0] — 2026-04-17 · MVP shippeable (P1 completo)
 
 ### Added
