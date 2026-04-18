@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { strings } from '@/content/strings/es-AR';
+import { ShareAchievementsButton } from './ShareAchievementsButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +22,7 @@ export default async function MisLogrosPage() {
 
   const { data: student } = await supabase
     .from('students')
-    .select('id, total_xp')
+    .select('id, first_name, total_xp')
     .eq('auth_user_id', user.id)
     .maybeSingle();
   if (!student) redirect('/entrar');
@@ -66,6 +67,18 @@ export default async function MisLogrosPage() {
           <p className="text-tinku-ink/70">
             Ganaste <strong data-testid="logros-earned-count">{earnedRows.length}</strong> de {rows.length} medallas.
           </p>
+          {earnedRows.length > 0 && (
+            <div className="pt-3 flex justify-center">
+              <ShareAchievementsButton
+                studentName={(student.first_name as string) ?? 'tu hijo/a'}
+                totalXp={(student.total_xp as number) ?? 0}
+                earnedBadges={earnedRows.map((b) => ({
+                  name_es: b.name_es,
+                  earned_at: earnedMap.get(b.id) as string,
+                }))}
+              />
+            </div>
+          )}
         </header>
 
         <section data-testid="logros-earned" className="space-y-3">

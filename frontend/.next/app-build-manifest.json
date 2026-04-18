@@ -16,6 +16,16 @@
       "static/chunks/main-app.js",
       "static/chunks/app/not-found.js"
     ],
+    "/(auth)/login/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(auth)/login/page.js"
+    ],
+    "/(auth)/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(auth)/layout.js"
+    ],
     "/entrar/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -31,20 +41,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(student)/layout.js"
     ],
+    "/(student)/mis-logros/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(student)/mis-logros/page.js"
+    ],
     "/(student)/isla/palabras/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(student)/isla/palabras/page.js"
-    ],
-    "/(student)/isla/argentina/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(student)/isla/argentina/page.js"
-    ],
-    "/(student)/isla/ciencias/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(student)/isla/ciencias/page.js"
     ]
   }
 }

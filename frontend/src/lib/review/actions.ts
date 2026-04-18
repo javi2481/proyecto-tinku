@@ -108,9 +108,46 @@ export async function bulkApproveByConceptAction(
 }
 
 /**
- * Resetea a 'pending' todos los ejercicios del seed automático (los que nunca
- * tuvieron pedagogical_reviewer_id). Para forzar revisión real de Javier.
+ * Setea quality_score (1-5) de un ejercicio. Guardado dentro de `content.quality_score`
+ * (sin migration). Se usa en `getNextExerciseAction` para priorizar ejercicios "excelentes".
  */
+export async function setExerciseQualityAction(
+  exerciseId: string,
+  score: number | null,
+): Promise<ReviewActionResult> {
+  const user = await requireAdmin();
+  const svc = createServiceSupabase();
+
+  if (score !== null && (score < 1 || score > 5 || !Number.isInteger(score))) {
+    return { ok: false, error: 'invalid_score' };
+  }
+
+  const { data: ex } = await svc
+    .from('exercises')
+    .select('content')
+    .eq('id', exerciseId)
+    .maybeSingle();
+  if (!ex) return { ok: false, error: 'not_found' };
+
+  const newContent = { ...(ex.content as Record<string, unknown>) };
+  if (score === null) delete newContent.quality_score;
+  else newContent.quality_score = score;
+
+  const { error } = await svc
+    .from('exercises')
+    .update({ content: newContent })
+    .eq('id', exerciseId);
+
+  if (error) {
+    await logger.error('review.quality_score', error.message, { exerciseId, score });
+    return { ok: false, error: 'generic' };
+  }
+
+  await logger.info('review.quality_score', 'updated', { exerciseId, score, reviewerId: user.id });
+  revalidatePath('/review-exercises');
+  return { ok: true, updated: 1 };
+}
+
 export async function resetUnreviewedToPendingAction(): Promise<ReviewActionResult> {
   await requireAdmin();
   const svc = createServiceSupabase();

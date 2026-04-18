@@ -7,6 +7,7 @@ import type { GradeLevel } from '@/types/database';
 import { VerifyBanner } from './VerifyBanner';
 import { isAdminEmail } from '@/lib/auth/admin';
 import { StudentActivityCard } from './StudentActivityCard';
+import { WeeklyReportButton } from './WeeklyReportButton';
 import { OnboardingTour } from './OnboardingTour';
 
 export const dynamic = 'force-dynamic';
@@ -145,11 +146,19 @@ export default async function DashboardPage() {
                     </div>
                   </Link>
                   {!pendingDel && (
-                    <StudentActivityCard
-                      studentId={s.id as string}
-                      studentName={s.first_name as string}
-                      loginCode={s.login_code as string}
-                    />
+                    <>
+                      <StudentActivityCard
+                        studentId={s.id as string}
+                        studentName={s.first_name as string}
+                        loginCode={s.login_code as string}
+                      />
+                      <div className="flex justify-end">
+                        <WeeklyReportButton
+                          studentId={s.id as string}
+                          studentName={s.first_name as string}
+                        />
+                      </div>
+                    </>
                   )}
                 </li>
               );

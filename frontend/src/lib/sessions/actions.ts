@@ -113,7 +113,26 @@ export async function getNextExerciseAction(
 
     const { data: exercises } = await query.limit(20);
     if (exercises && exercises.length > 0) {
-      const picked = exercises[Math.floor(Math.random() * exercises.length)];
+      // Weighted pick por quality_score (default 3 si no hay calificación).
+      // Score 1=peso 1, 2=2, 3=3, 4=5, 5=8 → los "excelentes" salen más seguido pero
+      // los otros no desaparecen, para mantener variedad.
+      const weightOf = (ex: Record<string, unknown>): number => {
+        const content = (ex.content ?? {}) as { quality_score?: number };
+        const q = content.quality_score;
+        if (q === 5) return 8;
+        if (q === 4) return 5;
+        if (q === 2) return 2;
+        if (q === 1) return 1;
+        return 3; // null/undefined/3 = neutro
+      };
+      const weights = exercises.map((ex) => weightOf(ex as Record<string, unknown>));
+      const totalWeight = weights.reduce((a, b) => a + b, 0);
+      let r = Math.random() * totalWeight;
+      let picked = exercises[0];
+      for (let i = 0; i < exercises.length; i++) {
+        r -= weights[i];
+        if (r <= 0) { picked = exercises[i]; break; }
+      }
       return {
         kind: 'exercise',
         exercise: picked as unknown as Exercise,

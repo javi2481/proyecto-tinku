@@ -170,8 +170,8 @@ Anti-KPIs (métricas que NO miramos):
 ## 🗺️ Roadmap de alto nivel
 
 - **Ola 1** (hecho) — Matemática grade_1/2. Padre + alumno + motor adaptativo. ✅
-- **Ola 2** (arrancando) — Palabras + Ciencias + Argentina grade_2 ✅. MercadoPago premium 🔜. Portal docente básico 🔜.
-- **Ola 3** — Multi-grado (3 a 7). Integración con Google Classroom.
+- **Ola 2** (casi cerrada) — 4 islas activas (Math + Palabras + Ciencias + Argentina) en grade_2 y grade_3 ✅. Reporte semanal + compartir medallas + quality_score ✅. MercadoPago premium 🔜. Portal docente básico 🔜.
+- **Ola 3** — Multi-grado (4 a 7). Integración con Google Classroom.
 - **Ola 4** — Tutor IA "Ari" (Claude/GPT con guardrails infantiles estrictos).
 
 Ver `ROADMAP.md` para detalle priorizado.

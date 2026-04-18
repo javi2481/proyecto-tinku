@@ -45,7 +45,7 @@ Ninguno activo. El producto es **funcionalmente usable** hoy con Paulina **en 4 
 - [ ] **Revisión pedagógica** de los 212 ejercicios seedeados (auto-approved hoy). UI ya existe en `/review-exercises`. Bloquea mostrar a padres de otros chicos. *Owner: Javier.*
 
 ### Contenido
-- [ ] Seed de ejercicios para **grade_3** (Matemática + Palabras + Ciencias).
+- [x] ~~Seed de ejercicios para **grade_3**~~ — **shippeado 2026-04-18** (12 conceptos × 10 ejercicios = 120 en las 4 islas).
 - [ ] Revisar/mejorar distractores de los MCQ (algunos son obvios, sobre todo Palabras).
 - [ ] Ampliar cada concepto de las islas nuevas de 10 → 20 ejercicios para tener buena variedad adaptativa.
 - [x] ~~Agregar explicaciones post-respuesta~~ — **shippeado 2026-04-17**.
@@ -66,11 +66,12 @@ Ninguno activo. El producto es **funcionalmente usable** hoy con Paulina **en 4 
 
 ## 🟢 P2 — Ola 2 (próximo hito mayor)
 
-### Contenido
+### Producto
 - [x] ~~Isla de las Palabras (Lengua)~~ — **shippeado 2026-04-18** (3 conceptos grade_2: B/V, sinónimos, comprensión).
 - [x] ~~Isla de las Ciencias~~ — **shippeado 2026-04-18** (3 conceptos grade_2: cuerpo, animales AR, plantas).
 - [x] ~~Isla Argentina (Ciudadanía)~~ — **shippeado 2026-04-18** (3 conceptos grade_2: símbolos, convivencia, geografía).
-- [ ] Expandir Matemática a grade_4 + grade_5 (números hasta 10.000, multiplicación, división, fracciones simples).
+- [x] ~~Seed grade_3 en las 4 islas~~ — **shippeado 2026-04-18** (12 conceptos × 10 ejercicios).
+- [ ] Expandir Matemática a grade_4 + grade_5 (multiplicación por 2 cifras, división con resto, fracciones simples).
 - [ ] Más tipos de ejercicio:
   - [ ] `fill_blank` (completar con palabra/número).
   - [ ] `drag_drop` (ordenar, clasificar).
@@ -91,10 +92,10 @@ Ninguno activo. El producto es **funcionalmente usable** hoy con Paulina **en 4 
 ## 🔵 P3 — Ola 3+ (backlog a futuro)
 
 ### Ideas sugeridas por el agente (pendientes de tu OK)
-- [x] ~~**"Momento de ayuda del grande"**~~ — **shippeado 2026-04-18** (alerta en dashboard + auto-clear cuando acierta + ack manual por padre).
-- [ ] **Compartir medallas por WhatsApp** — en `/mis-logros`, botón "Compartir medallas" que genera un PNG con el avatar del chico + medallas ganadas + XP + un mensaje tipo *"Paulina ya domina sumas con reagrupamiento 🌟"*, listo para enviar al abuelo/abuela. Loop viral: el chico presume + el padre recibe reconocimiento por invertir en educación. Bajísimo costo (canvas + Web Share API), alto impacto en retención y referral orgánico. ~1h.
-- [ ] **`quality_score` 1-5 por ejercicio** — después de revisar los 212 ejercicios, agregar un campo en `exercises` para calificar cuáles son "excelentes" vs "aceptables". El engine los prioriza proporcionalmente. Te da control pedagógico fino sin re-escribir. ~30 min.
-- [ ] **"Mini-reporte semanal por WhatsApp"** — cada domingo el padre puede pedir un resumen de la semana (minutos totales, conceptos nuevos dominados, alertas activas). Sin push molestas: el padre pide cuando quiere. Alto engagement familiar + cero fricción técnica. ~2h.
+- [x] ~~**"Momento de ayuda del grande"**~~ — **shippeado 2026-04-18**.
+- [x] ~~**Compartir medallas por WhatsApp**~~ — **shippeado 2026-04-18** (Web Share API + clipboard fallback, texto rioplatense autogenerado en `/mis-logros`).
+- [x] ~~**`quality_score` 1-5 por ejercicio**~~ — **shippeado 2026-04-18** (UI de 5 estrellas en `/review-exercises` + weighted pick en el engine adaptativo).
+- [x] ~~**"Mini-reporte semanal por WhatsApp"**~~ — **shippeado 2026-04-18** (botón "Reporte semanal" por hijo en dashboard; 7 días de sessions/attempts/mastery/struggling resumidos).
 
 ### Producto
 - [ ] **Isla de la Ciudadanía** — ampliar con datos cívicos actualizados (hoy `social` cubre símbolos + convivencia + geo básica; falta procesos electorales, instituciones, derechos humanos).

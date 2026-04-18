@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { reviewExerciseAction, bulkApproveByConceptAction, resetUnreviewedToPendingAction, type ReviewStatus } from '@/lib/review/actions';
+import { reviewExerciseAction, bulkApproveByConceptAction, resetUnreviewedToPendingAction, setExerciseQualityAction, type ReviewStatus } from '@/lib/review/actions';
 import { cn } from '@/lib/utils/cn';
 
 interface ExerciseRow {
@@ -10,7 +10,7 @@ interface ExerciseRow {
   exercise_type: string;
   prompt_es: string;
   correct_answer: { value: string };
-  content: { options?: string[]; placeholder?: string };
+  content: { options?: string[]; placeholder?: string; quality_score?: number };
   pedagogical_review_status: ReviewStatus;
   pedagogical_notes: string | null;
   pedagogical_reviewed_at: string | null;
@@ -84,6 +84,14 @@ export function ReviewClient({ sections, counts, totalReviewed, totalAll }: Prop
     startTransition(async () => {
       const res = await resetUnreviewedToPendingAction();
       if (res.ok) showFlash(`${res.updated} ejercicios marcados como pendientes`);
+    });
+  };
+
+  const onSetQuality = (exerciseId: string, score: number | null) => {
+    startTransition(async () => {
+      const res = await setExerciseQualityAction(exerciseId, score);
+      if (res.ok) showFlash(score === null ? 'Calidad borrada' : `Calidad: ${score} ⭐`);
+      else showFlash('Error al guardar calidad');
     });
   };
 
@@ -252,7 +260,7 @@ export function ReviewClient({ sections, counts, totalReviewed, totalAll }: Prop
                       />
                     )}
 
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <button
                         type="button"
                         onClick={() => onReview(e.id, 'approved')}
@@ -294,6 +302,31 @@ export function ReviewClient({ sections, counts, totalReviewed, totalAll }: Prop
                       >
                         {notesOpen ? 'Ocultar nota' : (e.pedagogical_notes ? 'Editar nota' : 'Agregar nota')}
                       </button>
+                      <div
+                        data-testid={`quality-stars-${e.id}`}
+                        className="flex items-center gap-0.5 ml-auto pl-2 border-l border-tinku-ink/10"
+                        title="Calidad pedagógica (1-5). El motor prioriza los de mayor puntaje."
+                      >
+                        {[1, 2, 3, 4, 5].map((n) => {
+                          const active = (e.content.quality_score ?? 0) >= n;
+                          return (
+                            <button
+                              key={n}
+                              type="button"
+                              disabled={isPending}
+                              onClick={() => onSetQuality(e.id, e.content.quality_score === n ? null : n)}
+                              data-testid={`quality-${e.id}-${n}`}
+                              aria-label={`Calidad ${n}`}
+                              className={cn(
+                                'w-7 h-7 rounded-md flex items-center justify-center text-base transition-colors disabled:opacity-50',
+                                active ? 'text-amber-400' : 'text-tinku-ink/20 hover:text-amber-300',
+                              )}
+                            >
+                              ★
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
                   </li>
                 );

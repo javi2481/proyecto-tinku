@@ -1,7 +1,6 @@
 {
   "/entrar/page": "app/entrar/page.js",
   "/(student)/islas/page": "app/(student)/islas/page.js",
-  "/(student)/isla/palabras/page": "app/(student)/isla/palabras/page.js",
-  "/(student)/isla/argentina/page": "app/(student)/isla/argentina/page.js",
-  "/(student)/isla/ciencias/page": "app/(student)/isla/ciencias/page.js"
+  "/(student)/mis-logros/page": "app/(student)/mis-logros/page.js",
+  "/(student)/isla/palabras/page": "app/(student)/isla/palabras/page.js"
 }

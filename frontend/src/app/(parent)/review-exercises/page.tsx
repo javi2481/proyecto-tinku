@@ -15,7 +15,7 @@ interface ExerciseRow {
   exercise_type: string;
   prompt_es: string;
   correct_answer: { value: string };
-  content: { options?: string[]; placeholder?: string };
+  content: { options?: string[]; placeholder?: string; quality_score?: number };
   pedagogical_review_status: ReviewStatus;
   pedagogical_notes: string | null;
   pedagogical_reviewed_at: string | null;

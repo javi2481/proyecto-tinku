@@ -10,6 +10,58 @@ Nada pendiente sin shippear. Si arranca un sprint nuevo, acá va.
 
 ---
 
+## [0.12.0] — 2026-04-18 · Grade 3 + Compartir medallas + Quality score + Reporte semanal
+
+### Added — Grade 3 (P2 completo)
+- **12 conceptos nuevos grade_3** (3 por isla) + **120 ejercicios aprobados** con explicación pedagógica rioplatense:
+  - **Matemática:** M3_NUM_10K (Números hasta 10.000), M3_MULT_BASIC (Tablas 2-9), M3_DIV_BASIC (División por 1 cifra).
+  - **Palabras:** L3_GJ (Uso de G y J), L3_H (Uso de la H), L3_ORACIONES (Tipos de oraciones).
+  - **Ciencias:** C3_AGUA (Ciclo del agua), C3_SOLAR (Sistema solar), C3_MATERIA (Materia y estados).
+  - **Argentina:** U3_PUEBLOS (Pueblos originarios), U3_SANMARTIN (San Martín y la Independencia), U3_REGIONES (Regiones argentinas).
+- Script idempotente `scripts/seed-grade3.mjs`.
+- Mix MCQ + numeric_input para las tablas y la división (entrenamiento de cálculo mental).
+
+### Added — Compartir medallas (P3)
+- Botón **"Compartir mis medallas"** en `/mis-logros` (visible solo si hay al menos 1 medalla ganada).
+- Usa **Web Share API** en mobile (abre WhatsApp/Telegram/mail nativo) con fallback a clipboard en desktop.
+- Mensaje rioplatense autogenerado: XP + cantidad de medallas + lista con fecha + CTA a tinku.app.
+- Cero canvas, cero librerías: solo texto. Funciona en cualquier dispositivo.
+
+### Added — Quality score por ejercicio (P3)
+- Nuevo campo `content.quality_score` (1-5, opcional) en `exercises` — **sin migration** (vive en el JSONB existente).
+- UI de 5 estrellas ⭐ en `/review-exercises` (admin): toggle con click, se limpia al re-tocar.
+- Server action `setExerciseQualityAction` con validación 1-5 + admin-only.
+- `getNextExerciseAction` ahora hace **weighted pick**: score 5→peso 8, 4→5, 3 (o null)→3, 2→2, 1→1. Los excelentes salen más seguido sin eliminar al resto.
+
+### Added — Reporte semanal del padre (P3)
+- Nuevo módulo `lib/review/weekly-report.ts` — `getWeeklyReportAction(studentId)` lee últimos 7 días de sessions + attempts + mastery + struggling y arma un texto rioplatense listo para compartir.
+- Botón **"📊 Reporte semanal"** por hijo en el dashboard. Abre modal liviano con el texto + botón **Copiar/Compartir** (Web Share API → clipboard fallback).
+- Incluye: minutos totales · días activos · ejercicios + accuracy · XP semanal · conceptos dominados esta semana · alertas de "le está costando".
+- Estado vacío: si no jugó, mensaje amigable ("¿Le damos un empujón?").
+
+### Fix
+- Eliminada la doble flecha `← ←` en el botón "Volver a las islas" de las islas nuevas (`renderIslaPage.tsx`).
+
+### Files
+- `frontend/scripts/seed-grade3.mjs` (nuevo, 120 ejercicios)
+- `frontend/src/app/(student)/mis-logros/ShareAchievementsButton.tsx` (nuevo)
+- `frontend/src/app/(parent)/dashboard/WeeklyReportButton.tsx` (nuevo)
+- `frontend/src/lib/review/weekly-report.ts` (nuevo)
+- `frontend/src/app/(parent)/review-exercises/ReviewClient.tsx` (quality stars UI)
+- `frontend/src/lib/review/actions.ts` (`setExerciseQualityAction`)
+- `frontend/src/lib/sessions/actions.ts` (weighted pick por quality_score)
+- `frontend/src/app/(student)/mis-logros/page.tsx` (integra ShareAchievementsButton)
+- `frontend/src/app/(parent)/dashboard/page.tsx` (integra WeeklyReportButton)
+- `frontend/src/app/(student)/isla/_shared/renderIslaPage.tsx` (fix double arrow)
+
+### Testing
+- ✅ Seed grade_3 ejecutado: 120 ejercicios / 12 conceptos (DB total approved: **290**).
+- ✅ TypeScript `tsc --noEmit` limpio en toda la base.
+- ✅ Smoke test Playwright: login Mateo → /mis-logros con botón "Compartir mis medallas" visible → /isla/palabras muestra los 3 conceptos grade_3 (L3_GJ, L3_H, L3_ORACIONES) tras bumpear temporalmente su grado (luego restaurado).
+- ⏳ **A verificar por Javier con cuenta Google real**: botón "Reporte semanal" en dashboard + UI de estrellas quality_score en /review-exercises.
+
+---
+
 ## [0.11.0] — 2026-04-18 · Ola 2 arranca + Momento de ayuda del grande
 
 ### Added — 3 islas nuevas (grade_2)
