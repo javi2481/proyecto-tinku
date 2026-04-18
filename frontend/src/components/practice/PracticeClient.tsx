@@ -185,6 +185,11 @@ export function PracticeClient({
 
         {/* Ejercicio */}
         <section data-testid="exercise-card" className="rounded-3xl bg-white p-6 sm:p-8 space-y-6 border-2 border-tinku-ink/5">
+          {(exercise.content as { passage?: string }).passage && (
+            <div data-testid="exercise-passage" className="rounded-2xl bg-tinku-sand/30 border border-tinku-sand p-4 text-tinku-ink/90 leading-relaxed whitespace-pre-line">
+              📖 {(exercise.content as { passage?: string }).passage}
+            </div>
+          )}
           <p data-testid="exercise-prompt" className="text-2xl font-semibold text-tinku-ink leading-snug">
             {exercise.prompt_es}
           </p>

@@ -22,7 +22,7 @@ async function requireStudent() {
 // START or REUSE SESSION
 // =============================================================================
 
-export async function startSessionAction(island: 'math'): Promise<{ sessionId: string }> {
+export async function startSessionAction(island: 'math' | 'language' | 'science' | 'social' | 'tech'): Promise<{ sessionId: string }> {
   const { studentId } = await requireStudent();
   const svc = createServiceSupabase();
 

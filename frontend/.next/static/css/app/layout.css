@@ -1058,6 +1058,9 @@ video {
 .overflow-y-auto {
   overflow-y: auto;
 }
+.whitespace-pre-line {
+  white-space: pre-line;
+}
 .rounded {
   border-radius: 0.25rem;
 }
@@ -1662,6 +1665,9 @@ video {
 }
 .text-tinku-ink\/85 {
   color: rgb(30 42 58 / 0.85);
+}
+.text-tinku-ink\/90 {
+  color: rgb(30 42 58 / 0.9);
 }
 .underline {
   text-decoration-line: underline;

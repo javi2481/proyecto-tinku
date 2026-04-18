@@ -17,9 +17,9 @@ interface IslandTile {
 
 const ISLANDS: IslandTile[] = [
   { key: 'math',     emoji: '🏝️', gradient: 'from-tinku-sea/30 to-tinku-sand/40', href: '/isla/numeros' },
-  { key: 'language', emoji: '📚', gradient: 'from-pink-100 to-pink-50' },
-  { key: 'science',  emoji: '🌿', gradient: 'from-green-100 to-green-50' },
-  { key: 'social',   emoji: '⏳', gradient: 'from-amber-100 to-amber-50' },
+  { key: 'language', emoji: '📚', gradient: 'from-pink-100 to-pink-50',            href: '/isla/palabras' },
+  { key: 'science',  emoji: '🌿', gradient: 'from-green-100 to-green-50',          href: '/isla/ciencias' },
+  { key: 'social',   emoji: '🇦🇷', gradient: 'from-sky-100 to-amber-50',           href: '/isla/argentina' },
   { key: 'tech',     emoji: '🔧', gradient: 'from-sky-100 to-sky-50' },
 ];
 

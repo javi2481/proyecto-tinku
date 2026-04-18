@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { startSessionAction, getNextExerciseAction } from '@/lib/sessions/actions';
-import { PracticeClient } from './PracticeClient';
+import { PracticeClient } from '@/components/practice/PracticeClient';
 
 export const dynamic = 'force-dynamic';
 
