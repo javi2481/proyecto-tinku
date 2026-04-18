@@ -73,8 +73,8 @@ Ninguno activo. El producto es **funcionalmente usable** hoy con Paulina **en 4 
 - [x] ~~Seed grade_3 en las 4 islas~~ — **shippeado 2026-04-18** (12 conceptos × 10 ejercicios).
 - [ ] Expandir Matemática a grade_4 + grade_5 (multiplicación por 2 cifras, división con resto, fracciones simples).
 - [ ] Más tipos de ejercicio:
-  - [ ] `fill_blank` (completar con palabra/número).
-  - [ ] `drag_drop` (ordenar, clasificar).
+  - [x] ~~`fill_blank` (completar con palabra/número).~~ — **shippeado**.
+  - [x] ~~`drag_drop` (ordenar, clasificar).~~ — **shippeado**.
   - [ ] `matching` (emparejar pares).
 
 ### Monetización

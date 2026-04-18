@@ -101,3 +101,66 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Implementar nuevo tipo de ejercicio fill_blank para Ola 2"
+frontend:
+  - task: "Crear componente FillBlankExercise"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/practice/FillBlankExercise.tsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "Componente React creado con soporte para placeholder {blank}. Pendiente integración en PracticeClient."
+  - task: "Integrar fill_blank en PracticeClient"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/practice/PracticeClient.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "Integrado en PracticeClient. Añadida normalización (.trim().toLowerCase()) y ocultado el prompt estándar para evitar que se muestre el {blank} crudo."
+  - task: "Script de seed fill_blank"
+    implemented: true
+    working: "NA"
+    file: "frontend/scripts/seed-fill-blank.mjs"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "Script idempotente creado para insertar ejercicios fill_blank de prueba usando el concepto L2_SINO_ANTO."
+  - task: "Implementar DragDropExercise"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/practice/DragDropExercise.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "Componente táctil de clasificación (tap-to-drop) y su integración en PracticeClient completa."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 2
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Verificar renderizado correcto de FillBlankExercise en la interfaz"
+    - "Comprobar que la respuesta se envía en lowercase y sin espacios sobrantes"
+    - "Ejecutar script seed-fill-blank.mjs"
+    - "Probar el ejercicio drag_drop y asegurar que requiera tener todas las zonas completas antes del Submit."
+  stuck_tasks: []
+  test_all: false
+  test_priority: "sequential"

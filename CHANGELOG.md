@@ -6,7 +6,10 @@ Todo lo que se construyó, en orden cronológico. Formato [Keep a Changelog](htt
 
 ## [Unreleased]
 
-Nada pendiente sin shippear. Si arranca un sprint nuevo, acá va.
+### Added
+- **Nuevo tipo de ejercicio `fill_blank`:** Componente interactivo para completar espacios en oraciones, validación que ignora mayúsculas/espacios, y script de seed para Isla de las Palabras.
+- **Nuevo tipo de ejercicio `drag_drop`:** Componente táctil (tap-to-select, tap-to-drop) optimizado para tablets/niños, ideal para clasificar y ordenar conceptos en Ciencias. Sin librerías pesadas.
+- **Motor Adaptativo:** Actualizado `PracticeClient` para soportar `fill_blank` y validación de llenado completo en `drag_drop`.
 
 ---
 

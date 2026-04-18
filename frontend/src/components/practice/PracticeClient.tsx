@@ -8,6 +8,8 @@ import type { Exercise } from '@/types/database';
 import { cn } from '@/lib/utils/cn';
 import { CelebrationModal, type CelebrationPayload } from '@/components/celebration/CelebrationModal';
 import { strings } from '@/content/strings/es-AR';
+import { FillBlankExercise } from './FillBlankExercise';
+import { DragDropExercise } from './DragDropExercise';
 
 interface Props {
   conceptId: string;
@@ -56,19 +58,27 @@ export function PracticeClient({
   const hints = (exercise.hints as Array<{ text: string }>) ?? [];
   const firstHint = hints[0]?.text;
   const isNumeric = exercise.exercise_type === 'numeric_input';
+  const isFillBlank = exercise.exercise_type === 'fill_blank';
+  const isDragDrop = exercise.exercise_type === 'drag_drop';
   const numericPlaceholder =
     (exercise.content as { placeholder?: string }).placeholder ?? '0';
 
   const onSubmit = () => {
     if (!selected) return;
+    if (isFillBlank && !selected.trim()) return;
     // Para numeric_input, no aceptar input vacío ni solo guión
     if (isNumeric && !/^-?\d+$/.test(selected)) return;
+    if (isDragDrop) {
+      const zonesCount = (exercise.content as { zones?: string[] }).zones?.length || 0;
+      const parsed = selected ? JSON.parse(selected) : {};
+      if (Object.keys(parsed).length < zonesCount) return;
+    }
     const timeSpent = Math.max(1, Math.round((Date.now() - startedAtRef.current) / 1000));
     startTransition(async () => {
       const res = await submitAttemptAction({
         sessionId,
         exerciseId: exercise.id,
-        answer: { value: selected },
+        answer: { value: isFillBlank ? selected.trim().toLowerCase() : selected },
         timeSpentSeconds: timeSpent,
         hintsUsed,
       });
@@ -190,9 +200,11 @@ export function PracticeClient({
               📖 {(exercise.content as { passage?: string }).passage}
             </div>
           )}
-          <p data-testid="exercise-prompt" className="text-2xl font-semibold text-tinku-ink leading-snug">
-            {exercise.prompt_es}
-          </p>
+          {!isFillBlank && (
+            <p data-testid="exercise-prompt" className="text-2xl font-semibold text-tinku-ink leading-snug">
+              {exercise.prompt_es}
+            </p>
+          )}
 
           {isNumeric ? (
             <div data-testid="exercise-numeric" className="space-y-3">
@@ -220,6 +232,30 @@ export function PracticeClient({
                   feedback && feedback.correct && 'border-tinku-leaf bg-tinku-leaf/15',
                   feedback && !feedback.correct && 'border-tinku-warn bg-tinku-warn/10',
                 )}
+              />
+            </div>
+          ) : isFillBlank ? (
+            <div data-testid="exercise-fill-blank" className="flex justify-center py-2">
+              <FillBlankExercise
+                prompt={exercise.prompt_es}
+                value={selected ?? ''}
+                onChange={(val) => {
+                  if (feedback || isPending) return;
+                  setSelected(val);
+                }}
+                disabled={Boolean(feedback) || isPending}
+              />
+            </div>
+          ) : isDragDrop ? (
+            <div data-testid="exercise-drag-drop" className="w-full">
+              <DragDropExercise
+                content={exercise.content as { items: string[]; zones: string[] }}
+                value={selected ?? ''}
+                onChange={(val) => {
+                  if (feedback || isPending) return;
+                  setSelected(val);
+                }}
+                disabled={Boolean(feedback) || isPending}
               />
             </div>
           ) : (
