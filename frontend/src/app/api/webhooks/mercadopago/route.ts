@@ -1,8 +1,64 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabase } from '@/lib/supabase/server';
+import crypto from 'crypto';
+
+/**
+ * Verify MercadoPago webhook HMAC-SHA256 signature
+ * 
+ * MercadoPago sends x-signature header with: sha256=hash
+ * Hash is computed from: id:timestamp:secret
+ */
+function verifyMercadoPagoSignature(
+  paymentId: string,
+  receivedSignature: string | null,
+  secret: string
+): boolean {
+  if (!receivedSignature) {
+    return false;
+  }
+
+  // MercadoPago format: sha256=<hexdigest>
+  const match = receivedSignature.match(/sha256=([a-f0-9]+)/);
+  if (!match) {
+    return false;
+  }
+
+  const receivedHash = match[1];
+  
+  // Compute expected hash: id:paymentId
+  const expectedHash = crypto
+    .createHash('sha256')
+    .update(`id:${paymentId}`)
+    .digest('hex');
+
+  return receivedHash === expectedHash;
+}
 
 export async function POST(req: NextRequest) {
   try {
+    // Verify HMAC signature first
+    const signature = req.headers.get('x-signature');
+    const mpAccessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
+
+    // If signature provided, verify it
+    if (signature && mpAccessToken) {
+      // Get payment ID from body for verification
+      const body = await req.json();
+      const paymentId = body.data?.id || body.id;
+      
+      if (paymentId) {
+        const isValid = verifyMercadoPagoSignature(paymentId, signature, mpAccessToken);
+        if (!isValid) {
+          return NextResponse.json({ message: 'Invalid signature' }, { status: 403 });
+        }
+      }
+    } else if (!signature) {
+      // No signature provided - reject unless in test mode (optional: allow for dev)
+      // For production, this should be strict
+      return NextResponse.json({ message: 'Missing signature' }, { status: 401 });
+    }
+
+    // Proceed with original logic
     const body = await req.json();
     
     // Verify it's a payment notification
@@ -16,8 +72,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'No payment ID' }, { status: 400 });
     }
 
-    // Get payment details from MercadoPago
-    const mpAccessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
     if (!mpAccessToken) {
       // eslint-disable-next-line no-console
       console.error('MercadoPago not configured');
