@@ -20,10 +20,13 @@ node_modules/
 /coverage
 
 # Next.js
-/.next/
+.next/
 /out/
 next-env.d.ts
 *.tsbuildinfo
+
+# Root yarn.lock autogenerado vacío (el real está en frontend/yarn.lock)
+/yarn.lock
 
 # Production builds
 /build
