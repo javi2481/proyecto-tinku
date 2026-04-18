@@ -95,6 +95,18 @@ export async function getNextExerciseAction(
     return { kind: 'mastered', pKnown };
   }
 
+  // Últimos ejercicios que vio este alumno en este concepto (anti-repetición).
+  // Traemos 8 para cubrir una sesión típica. Estos se excluyen del pool en primera pasada;
+  // si el pool se agota, permitimos repetir (fallback a pool completo).
+  const { data: recent } = await svc
+    .from('attempts')
+    .select('exercise_id')
+    .eq('student_id', studentId)
+    .eq('concept_id', conceptId)
+    .order('created_at', { ascending: false })
+    .limit(8);
+  const recentIds = new Set((recent ?? []).map((r) => r.exercise_id as string));
+
   // Tryecto de difficulty: target primero, luego vecinos para no quedar sin contenido
   const fallbackOrder: ExerciseDifficulty[] =
     target === 'easy' ? ['easy', 'medium', 'hard']
@@ -111,35 +123,40 @@ export async function getNextExerciseAction(
       .is('deleted_at', null);
     if (excludeExerciseId) query = query.neq('id', excludeExerciseId);
 
-    const { data: exercises } = await query.limit(20);
-    if (exercises && exercises.length > 0) {
-      // Weighted pick por quality_score (default 3 si no hay calificación).
-      // Score 1=peso 1, 2=2, 3=3, 4=5, 5=8 → los "excelentes" salen más seguido pero
-      // los otros no desaparecen, para mantener variedad.
-      const weightOf = (ex: Record<string, unknown>): number => {
-        const content = (ex.content ?? {}) as { quality_score?: number };
-        const q = content.quality_score;
-        if (q === 5) return 8;
-        if (q === 4) return 5;
-        if (q === 2) return 2;
-        if (q === 1) return 1;
-        return 3; // null/undefined/3 = neutro
-      };
-      const weights = exercises.map((ex) => weightOf(ex as Record<string, unknown>));
-      const totalWeight = weights.reduce((a, b) => a + b, 0);
-      let r = Math.random() * totalWeight;
-      let picked = exercises[0];
-      for (let i = 0; i < exercises.length; i++) {
-        r -= weights[i];
-        if (r <= 0) { picked = exercises[i]; break; }
-      }
-      return {
-        kind: 'exercise',
-        exercise: picked as unknown as Exercise,
-        pKnown,
-        attemptsSoFar: attempts,
-      };
+    const { data: exercises } = await query.limit(50);
+    if (!exercises || exercises.length === 0) continue;
+
+    // Filtrar los que ya vio recientemente. Si se agota, usar el pool entero (mejor repetir
+    // que quedarse sin contenido).
+    let candidates = exercises.filter((ex) => !recentIds.has(ex.id as string));
+    if (candidates.length === 0) candidates = exercises;
+
+    // Weighted pick por quality_score (default 3 si no hay calificación).
+    // Score 1=peso 1, 2=2, 3=3, 4=5, 5=8 → los "excelentes" salen más seguido pero
+    // los otros no desaparecen, para mantener variedad.
+    const weightOf = (ex: Record<string, unknown>): number => {
+      const content = (ex.content ?? {}) as { quality_score?: number };
+      const q = content.quality_score;
+      if (q === 5) return 8;
+      if (q === 4) return 5;
+      if (q === 2) return 2;
+      if (q === 1) return 1;
+      return 3; // null/undefined/3 = neutro
+    };
+    const weights = candidates.map((ex) => weightOf(ex as Record<string, unknown>));
+    const totalWeight = weights.reduce((a, b) => a + b, 0);
+    let r = Math.random() * totalWeight;
+    let picked = candidates[0];
+    for (let i = 0; i < candidates.length; i++) {
+      r -= weights[i];
+      if (r <= 0) { picked = candidates[i]; break; }
     }
+    return {
+      kind: 'exercise',
+      exercise: picked as unknown as Exercise,
+      pKnown,
+      attemptsSoFar: attempts,
+    };
   }
 
   return { kind: 'no_content', pKnown };
