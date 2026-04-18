@@ -1,3 +1,5 @@
+import { withSentryConfig } from '@sentry/nextjs';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -25,4 +27,13 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+const SentryWebpackPluginOptions = {
+  org: 'tinku-proyecto',
+  project: 'tinku-frontend',
+  silent: true,
+  widenClientFileUpload: true,
+  hideSourceMaps: true,
+  disableLogger: true,
+};
+
+export default withSentryConfig(nextConfig, SentryWebpackPluginOptions);

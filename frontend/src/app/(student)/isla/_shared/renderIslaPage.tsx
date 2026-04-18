@@ -54,7 +54,10 @@ export async function renderIslaPage(opts: {
   }
 
   return (
-    <div data-testid={`isla-${opts.subject}-page`} className={`min-h-screen ${opts.bgGradient}`}>
+    <div
+      data-testid={`isla-${opts.subject}-page`}
+      className={`min-h-screen ${opts.bgGradient}`}
+    >
       <div className="max-w-3xl mx-auto px-5 py-6 space-y-6">
         <Link
           href="/islas"
@@ -84,7 +87,7 @@ export async function renderIslaPage(opts: {
                   key={c.id as string}
                   href={`${opts.basePath}/concepto/${c.id}`}
                   data-testid={`concept-tile-${c.code}`}
-                  className="block exercise-target rounded-3xl bg-white p-5 hover:scale-[1.01] hover:shadow-md transition-all border-2 border-tinku-ink/10"
+                  className="block exercise-target rounded-3xl bg-white p-5 hover:shadow-md transition-all border-2 border-tinku-ink/10"
                 >
                   <div className="flex items-start gap-3">
                     <div className="flex-1 min-w-0">

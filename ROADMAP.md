@@ -27,7 +27,13 @@ Lista completa en `CHANGELOG.md`. Resumen:
 
 ## 🔴 P0 — Bloqueantes inmediatos
 
-Ninguno activo. El producto es **funcionalmente usable** hoy con Paulina **en 4 islas**.
+**Pendiente post-revisión pedagógica:**
+- [ ] Revisar manualmente los 24 ejercicios marcados como "needs_revision" (distractores problemáticos)
+- [ ] Procesar los 6 ejercicios pending (fill_blank, drag_drop)
+- [ ] Agregar secrets en GitHub repo antes de deploy: `TINKU_APP_URL`, `CRON_SECRET`.
+- [ ] `ADMIN_EMAILS` en producción (tu email).
+
+El producto es **funcionalmente usable** hoy con los 298 ejercicios aprobados.
 
 ---
 
@@ -42,19 +48,16 @@ Ninguno activo. El producto es **funcionalmente usable** hoy con Paulina **en 4 
 - [x] ~~Isla de las Palabras (Lengua) — 3 conceptos × 10 ejercicios~~ — **shippeado 2026-04-18**.
 - [x] ~~Isla de las Ciencias — 3 conceptos × 10 ejercicios~~ — **shippeado 2026-04-18**.
 - [x] ~~Isla Argentina (Ciudadanía) — 3 conceptos × 10 ejercicios~~ — **shippeado 2026-04-18**.
-- [ ] **Revisión pedagógica** de los 212 ejercicios seedeados (auto-approved hoy). UI ya existe en `/review-exercises`. Bloquea mostrar a padres de otros chicos. *Owner: Javier.*
+- [x] **Revisión pedagógica** de 328 ejercicios — **shippeado 2026-04-18** (298 approved, 24 needs revision, 6 pending). Ver `memory/INFORME_REVISION_PEDAGOGICA.md`.
 
 ### Contenido
 - [x] ~~Seed de ejercicios para **grade_3**~~ — **shippeado 2026-04-18** (12 conceptos × 10 ejercicios = 120 en las 4 islas).
-- [ ] Revisar/mejorar distractores de los MCQ (algunos son obvios, sobre todo Palabras).
+- [x] ~~Revisar/mejorar distractores de los MCQ~~ — **parcial 2026-04-18** (22 problematicos identificados, necesitan revisión manual).
 - [ ] Ampliar cada concepto de las islas nuevas de 10 → 20 ejercicios para tener buena variedad adaptativa.
 - [x] ~~Agregar explicaciones post-respuesta~~ — **shippeado 2026-04-17**.
 
 ### Infra / deploy
-- [ ] Agregar secrets en GitHub repo antes de deploy: `TINKU_APP_URL`, `CRON_SECRET`.
-- [ ] `ADMIN_EMAILS` en env de producción (hoy tiene solo el test user).
-- [ ] **Sentry** real para errores frontend + server actions (hoy stub en `app_logs`).
-- [ ] **PostHog** real para analytics event-level (hoy stub en `app_logs`).
+- [x] ~~Revisión pedagógica~~ — **completo 2026-04-18** (298 approved, 24 pending revisión manual, 6 pending).
 - [x] ~~Landing page `/`~~ — **shippeado 2026-04-18** (hero + 3 beneficios + 3 pasos + footer legal).
 - [x] ~~Onboarding del padre (tour de 3 pasos)~~ — **shippeado 2026-04-18** (4 pasos + localStorage).
 

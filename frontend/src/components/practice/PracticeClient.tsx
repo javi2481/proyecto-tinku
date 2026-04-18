@@ -10,6 +10,7 @@ import { CelebrationModal, type CelebrationPayload } from '@/components/celebrat
 import { strings } from '@/content/strings/es-AR';
 import { FillBlankExercise } from './FillBlankExercise';
 import { DragDropExercise } from './DragDropExercise';
+import { useAudio } from '@/lib/hooks';
 
 interface Props {
   conceptId: string;
@@ -45,6 +46,9 @@ export function PracticeClient({
   // Cola de celebraciones grandes (mastered + cada badge nuevo). Se van consumiendo una a una.
   const [celebrations, setCelebrations] = useState<Array<Omit<CelebrationPayload, 'onClose'>>>([]);
   const startedAtRef = useRef<number>(Date.now());
+  
+  // Audio feedback
+  const { playCorrect, playWrong, playXpGain, playBadge } = useAudio();
 
   useEffect(() => {
     startedAtRef.current = Date.now();
@@ -89,6 +93,19 @@ export function PracticeClient({
         newBadges: res.newBadges,
       });
       setPKnown(res.pKnownNew);
+
+      // Audio feedback
+      if (res.correct) {
+        playCorrect();
+        if (res.xpEarned > 10) playXpGain();
+      } else {
+        playWrong();
+      }
+
+      // Badge audio
+      for (const _ of res.newBadges) {
+        playBadge();
+      }
 
       // Armar cola de celebraciones grandes: concepto dominado → 1 por badge nuevo.
       const c: Array<Omit<CelebrationPayload, 'onClose'>> = [];

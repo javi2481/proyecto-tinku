@@ -9,6 +9,7 @@ import { isAdminEmail } from '@/lib/auth/admin';
 import { StudentActivityCard } from './StudentActivityCard';
 import { WeeklyReportButton } from './WeeklyReportButton';
 import { OnboardingTour } from './OnboardingTour';
+import { DashboardCharts } from './DashboardCharts';
 
 export const dynamic = 'force-dynamic';
 
@@ -163,10 +164,15 @@ export default async function DashboardPage() {
                 </li>
               );
             })}
-          </ul>
-        )}
+</ul>
+          )}
 
-        {hasStudents && !capacity.canAddMore && (
+          {/* Charts - solo si hay hijos */}
+          {hasStudents && (
+            <DashboardCharts students={students as unknown as Array<{id: string; first_name: string; total_xp: number}>} />
+          )}
+
+          {hasStudents && !capacity.canAddMore && (
           <p className="text-xs text-tinku-ink/60 text-center pt-2">
             {strings.parent.dashboard.planLimitReached
               .replace('{limit}', String(capacity.limit))
