@@ -6,6 +6,7 @@ import { createServiceSupabase } from '@/lib/supabase/service';
 import { computeXp, updatePKnown, pickDifficulty } from '@/lib/adaptive/engine';
 import { logger } from '@/lib/observability/logger';
 import { logDataAccess } from '@/lib/audit/log';
+import { trackStrugglingFromAttempt } from '@/lib/review/struggling';
 import type { AnswerOutcome, Exercise, ExerciseDifficulty } from '@/types/database';
 
 async function requireStudent() {
@@ -161,6 +162,18 @@ export async function submitAttemptAction(input: SubmitAttemptInput): Promise<Su
   if (!exercise) throw new Error('Exercise not found');
 
   const conceptId = exercise.concept_id as string;
+
+  // Último attempt previo del alumno sobre este mismo concepto (para "momento de ayuda del grande")
+  const { data: lastConceptAttempt } = await svc
+    .from('attempts')
+    .select('outcome')
+    .eq('student_id', studentId)
+    .eq('concept_id', conceptId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const previousOutcomeOnConcept = (lastConceptAttempt?.outcome as AnswerOutcome | undefined) ?? null;
+
   const difficulty = exercise.difficulty as ExerciseDifficulty;
   const correctValue = (exercise.correct_answer as { value: unknown }).value;
 
@@ -270,6 +283,14 @@ export async function submitAttemptAction(input: SubmitAttemptInput): Promise<Su
     xp: xpEarned,
     mastered: justMastered,
     badges_awarded: newBadges.map((b) => b.code),
+  });
+
+  // "Momento de ayuda del grande" — alerta al padre si hay 2 incorrect seguidos
+  void trackStrugglingFromAttempt({
+    studentId,
+    conceptId,
+    currentOutcome: outcome,
+    previousOutcomeOnConcept,
   });
 
   return {

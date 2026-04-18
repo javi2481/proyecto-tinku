@@ -10,6 +10,49 @@ Nada pendiente sin shippear. Si arranca un sprint nuevo, acá va.
 
 ---
 
+## [0.11.0] — 2026-04-18 · Ola 2 arranca + Momento de ayuda del grande
+
+### Added — 3 islas nuevas (grade_2)
+- **Isla de las Palabras** (Lengua) con 3 conceptos: Ortografía B/V, Sinónimos y antónimos, Comprensión lectora. 30 ejercicios aprobados.
+- **Isla de las Ciencias** con 3 conceptos: Cuerpo humano, Animales argentinos, Las plantas. 30 ejercicios aprobados.
+- **Isla Argentina** (Ciudadanía) con 3 conceptos: Símbolos patrios, Convivencia y derechos, Geografía argentina básica. 30 ejercicios aprobados.
+- Script idempotente `scripts/seed-content-olas.mjs` (90 ejercicios en total; todos con explicación pedagógica).
+- `renderIslaPage.tsx` factory compartida — cada isla es un wrapper de 10 líneas con subject + copy + color.
+- `PracticeClient` movido a `components/practice/` y reutilizado por las 4 islas sin duplicar código.
+- `startSessionAction(island)` ahora acepta `'math' | 'language' | 'science' | 'social' | 'tech'`.
+
+### Added — "Momento de ayuda del grande"
+- Nuevo módulo `lib/review/struggling.ts`:
+  - `getStrugglingAlerts(studentId)` — lee el último evento por concepto desde `data_access_log` y devuelve las alertas activas.
+  - `trackStrugglingFromAttempt()` — escribe `concept.struggling_alert` en el log cuando se detectan 2 incorrects seguidos, o `concept.struggling_cleared` cuando el alumno acierta después.
+  - `acknowledgeStrugglingAction(studentId, conceptId)` — server action: el padre marca "ya lo ayudé" → escribe `struggling_cleared` manual.
+- `submitAttemptAction` ahora lee el último outcome del alumno sobre el mismo concepto y llama al tracker (fire-and-forget).
+- `StudentActivityCard` muestra, cuando hay alertas activas, un bloque naranja con lista de conceptos ("Se está trabando con **Sinónimos y antónimos**. 3 minutos tuyos acá ayudan un montón.") + botón "Ya lo ayudé" por concepto.
+- Nuevo componente cliente `AcknowledgeStrugglingButton.tsx` con `useTransition` + estado confirmado inline.
+- Sin migration: todo vive en `data_access_log` (append-only, ya RLS-segura).
+
+### Removed
+- ~~Resend completamente borrado del proyecto~~ (ya en 0.10.x; acá se verifica).
+
+### Files
+- `frontend/src/lib/review/struggling.ts` (nuevo)
+- `frontend/src/app/(parent)/dashboard/AcknowledgeStrugglingButton.tsx` (nuevo)
+- `frontend/src/app/(parent)/dashboard/StudentActivityCard.tsx` (extendido con bloque de alertas)
+- `frontend/src/lib/sessions/actions.ts` (fetch last outcome on concept + llamada al tracker)
+- `frontend/src/app/(student)/isla/_shared/renderIslaPage.tsx` (nuevo, factory)
+- `frontend/src/app/(student)/isla/{palabras,ciencias,argentina}/page.tsx` (nuevas)
+- `frontend/src/app/(student)/isla/{palabras,ciencias,argentina}/concepto/[id]/page.tsx` (nuevas)
+- `frontend/scripts/seed-content-olas.mjs` (nuevo)
+- `frontend/scripts/test-struggling-flow.mjs` (test de validación backend del flujo)
+
+### Testing
+- ✅ Seed ejecutado y validado contra DB: 9 conceptos + 90 ejercicios aprobados en `language/science/social` (total approved en DB: 170).
+- ✅ Script `test-struggling-flow.mjs` verifica: alerta activa detectada → limpieza tras correct → sin residuos.
+- ✅ Smoke test Playwright: las 4 islas renderizan con concepts cards y progreso en 0% para Mateo (74RTPM).
+- ⏳ Dashboard del padre mostrando el alert: hay que verificar con login Google real (testing automatizado no puede OAuth).
+
+---
+
 ## [0.10.0] — 2026-04-18 · Vidriera pública (landing + legal + onboarding)
 
 ### Added

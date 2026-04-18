@@ -57,14 +57,15 @@ Tinkú **complementa**, no reemplaza, la escuela. No es una tarea más, es un ra
 - [x] Sesión persistente (cookies httpOnly).
 
 ### Experiencia del alumno
-- [x] Mapa de islas (hoy solo Isla de los Números activa).
+- [x] Mapa de islas (**4 islas activas**: Números, Palabras, Ciencias, Argentina).
 - [x] Grid de conceptos por grado con progress bar de `p_known`.
-- [x] **Motor adaptativo** (BKT simplificado) que ajusta dificultad.
+- [x] **Motor adaptativo** (BKT simplificado) que ajusta dificultad — funciona transparentemente en las 4 islas.
 - [x] Tipos de ejercicio: `multiple_choice`, `numeric_input`.
 - [x] Feedback positivo (sin rojos), celebraciones ≥1.5s.
 - [x] Badges + XP + streak.
 - [x] Página "Mis medallas" (ganadas + para desbloquear).
 - [x] **Modo repaso diario 5 min** — 5 ejercicios de conceptos más flojos.
+- [x] **"Momento de ayuda del grande"** — 2 fails seguidos en un concepto → alerta en dashboard del padre; se limpia sola cuando acierta o el padre confirma "ya lo ayudé".
 
 ### Compliance legal
 - [x] RLS activo en las 17 tablas (31 políticas).
@@ -135,7 +136,7 @@ Tablas principales (ver `/supabase/migrations/0001_initial_schema.sql` para deta
 - **Estilos:** Tailwind + design tokens Tinkú (variables CSS).
 - **Fonts:** Andika (alumno), Inter (padre).
 - **Icons:** Lucide + emojis curados.
-- **Email:** Resend (sandbox hoy; dominio propio en DNS checking).
+- **Email:** (eliminado en Ola 2; no usamos Resend; auth padre es solo Google OAuth).
 - **Hosting:** Emergent preview (dev); pendiente decisión producción.
 
 ---
@@ -168,9 +169,9 @@ Anti-KPIs (métricas que NO miramos):
 
 ## 🗺️ Roadmap de alto nivel
 
-- **Ola 1** (actual) — Matemática grade_1/2. Padre + alumno + motor adaptativo. ✅
-- **Ola 2** — Isla de las Palabras (Lengua). MercadoPago premium. Portal docente básico.
-- **Ola 3** — Ciencias + Ciudadanía. Integración con Google Classroom.
+- **Ola 1** (hecho) — Matemática grade_1/2. Padre + alumno + motor adaptativo. ✅
+- **Ola 2** (arrancando) — Palabras + Ciencias + Argentina grade_2 ✅. MercadoPago premium 🔜. Portal docente básico 🔜.
+- **Ola 3** — Multi-grado (3 a 7). Integración con Google Classroom.
 - **Ola 4** — Tutor IA "Ari" (Claude/GPT con guardrails infantiles estrictos).
 
 Ver `ROADMAP.md` para detalle priorizado.

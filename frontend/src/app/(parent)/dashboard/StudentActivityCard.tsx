@@ -1,8 +1,10 @@
 // Fix: mover la importación del componente cliente arriba (los 'use client' deben ser importados limpios).
 import { CopyButton } from './CopyActivityLinkButton';
+import { AcknowledgeStrugglingButton } from './AcknowledgeStrugglingButton';
 import Link from 'next/link';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { getReviewStreak } from '@/lib/review/streak';
+import { getStrugglingAlerts } from '@/lib/review/struggling';
 
 interface Props {
   studentId: string;
@@ -23,7 +25,7 @@ interface Props {
 export async function StudentActivityCard({ studentId, studentName, loginCode }: Props) {
   const svc = createServiceSupabase();
 
-  const [{ data: lastSession }, streak] = await Promise.all([
+  const [{ data: lastSession }, streak, strugglingAlerts] = await Promise.all([
     svc.from('sessions')
       .select('started_at, exercises_attempted')
       .eq('student_id', studentId)
@@ -31,6 +33,7 @@ export async function StudentActivityCard({ studentId, studentName, loginCode }:
       .limit(1)
       .maybeSingle(),
     getReviewStreak(studentId),
+    getStrugglingAlerts(studentId),
   ]);
 
   const lastActivityAt = lastSession?.started_at as string | undefined;
@@ -68,6 +71,37 @@ export async function StudentActivityCard({ studentId, studentName, loginCode }:
       </div>
       {(state === 'pending' || state === 'soft_alert' || state === 'alert') && (
         <ShareLinkButton studentName={studentName} loginCode={loginCode} />
+      )}
+      {strugglingAlerts.length > 0 && (
+        <div
+          data-testid={`struggling-alerts-${studentId}`}
+          className="rounded-2xl bg-tinku-warn/15 border-2 border-tinku-warn/40 p-3 space-y-2"
+        >
+          <div className="flex items-start gap-2">
+            <span aria-hidden className="text-xl leading-none">🔔</span>
+            <p className="text-sm font-semibold text-tinku-warn">
+              {studentName} necesita una manito
+            </p>
+          </div>
+          <ul className="space-y-2">
+            {strugglingAlerts.map((a) => (
+              <li
+                key={a.conceptId}
+                data-testid={`struggling-item-${a.conceptCode}`}
+                className="flex flex-wrap items-center justify-between gap-2 text-xs text-tinku-ink/85"
+              >
+                <span className="font-medium">
+                  Se está trabando con <strong>{a.conceptName}</strong>. 3 minutos tuyos acá ayudan un montón.
+                </span>
+                <AcknowledgeStrugglingButton
+                  studentId={studentId}
+                  conceptId={a.conceptId}
+                  conceptName={a.conceptName}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
       <p className="text-[11px]">
         <Link

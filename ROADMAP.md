@@ -27,26 +27,30 @@ Lista completa en `CHANGELOG.md`. Resumen:
 
 ## 🔴 P0 — Bloqueantes inmediatos
 
-Ninguno activo. El producto es **funcionalmente usable** hoy con Paulina.
+Ninguno activo. El producto es **funcionalmente usable** hoy con Paulina **en 4 islas**.
 
 ---
 
-## 🟡 P1 — Calidad Ola 1 (shippeable antes de probar con usuarios reales)
+## 🟡 P1 — Calidad Ola 2 (shippeable antes de probar con usuarios reales)
 
 ### Producto
 - [x] ~~Dashboard del padre con progreso real del hijo~~ — **shippeado 2026-04-17**.
 - [x] ~~Recordatorio de repaso diario en dashboard del padre~~ — **shippeado 2026-04-17** (StudentActivityCard).
 - [x] ~~Streak del repaso diario~~ — **shippeado 2026-04-17** (streak_3/7/30_review badges).
 - [x] ~~Explicaciones post-respuesta cuando el chico falla~~ — **shippeado 2026-04-17** (121 ejercicios con explicación).
-- [ ] **Revisión pedagógica** de los 122 ejercicios seedeados (automático-approved hoy). Bloquea mostrar a padres de otros chicos. *Owner: Javier · UI en `/review-exercises`.*
+- [x] ~~"Momento de ayuda del grande"~~ — **shippeado 2026-04-18** (alerta en dashboard + auto-clear + ack manual).
+- [x] ~~Isla de las Palabras (Lengua) — 3 conceptos × 10 ejercicios~~ — **shippeado 2026-04-18**.
+- [x] ~~Isla de las Ciencias — 3 conceptos × 10 ejercicios~~ — **shippeado 2026-04-18**.
+- [x] ~~Isla Argentina (Ciudadanía) — 3 conceptos × 10 ejercicios~~ — **shippeado 2026-04-18**.
+- [ ] **Revisión pedagógica** de los 212 ejercicios seedeados (auto-approved hoy). UI ya existe en `/review-exercises`. Bloquea mostrar a padres de otros chicos. *Owner: Javier.*
 
 ### Contenido
-- [ ] Seed de ejercicios para **grade_3** (~20 por concepto en 3 conceptos).
-- [ ] Revisar/mejorar distractores de los MCQ generados por template (algunos son demasiado obvios).
-- [x] ~~Agregar explicaciones post-respuesta cuando el chico falla~~ — **shippeado 2026-04-17**.
+- [ ] Seed de ejercicios para **grade_3** (Matemática + Palabras + Ciencias).
+- [ ] Revisar/mejorar distractores de los MCQ (algunos son obvios, sobre todo Palabras).
+- [ ] Ampliar cada concepto de las islas nuevas de 10 → 20 ejercicios para tener buena variedad adaptativa.
+- [x] ~~Agregar explicaciones post-respuesta~~ — **shippeado 2026-04-17**.
 
 ### Infra / deploy
-- [ ] **Verificar dominio Resend** cuando termine el DNS checking → actualizar `RESEND_FROM` en `.env.local` y en producción.
 - [ ] Agregar secrets en GitHub repo antes de deploy: `TINKU_APP_URL`, `CRON_SECRET`.
 - [ ] `ADMIN_EMAILS` en env de producción (hoy tiene solo el test user).
 - [ ] **Sentry** real para errores frontend + server actions (hoy stub en `app_logs`).
@@ -63,7 +67,9 @@ Ninguno activo. El producto es **funcionalmente usable** hoy con Paulina.
 ## 🟢 P2 — Ola 2 (próximo hito mayor)
 
 ### Contenido
-- [ ] **Isla de las Palabras** (Lengua) — lectura, vocabulario, ortografía.
+- [x] ~~Isla de las Palabras (Lengua)~~ — **shippeado 2026-04-18** (3 conceptos grade_2: B/V, sinónimos, comprensión).
+- [x] ~~Isla de las Ciencias~~ — **shippeado 2026-04-18** (3 conceptos grade_2: cuerpo, animales AR, plantas).
+- [x] ~~Isla Argentina (Ciudadanía)~~ — **shippeado 2026-04-18** (3 conceptos grade_2: símbolos, convivencia, geografía).
 - [ ] Expandir Matemática a grade_4 + grade_5 (números hasta 10.000, multiplicación, división, fracciones simples).
 - [ ] Más tipos de ejercicio:
   - [ ] `fill_blank` (completar con palabra/número).
@@ -85,13 +91,13 @@ Ninguno activo. El producto es **funcionalmente usable** hoy con Paulina.
 ## 🔵 P3 — Ola 3+ (backlog a futuro)
 
 ### Ideas sugeridas por el agente (pendientes de tu OK)
-- [ ] **"Momento de ayuda del grande"** — cuando el alumno falla 2 veces seguidas el mismo concepto, aparece un botón discreto "¿Te ayuda un grande?". Si lo toca, se manda una alerta al dashboard del padre tipo _"Paulina está trabada con restas — 3 minutos de tu tiempo vuelven esto al carril"_. Humaniza la tecnología, hace al padre participante (no espectador). La IA no reemplaza una buena explicación del papá/mamá en el momento justo. ~1-2h.
+- [x] ~~**"Momento de ayuda del grande"**~~ — **shippeado 2026-04-18** (alerta en dashboard + auto-clear cuando acierta + ack manual por padre).
 - [ ] **Compartir medallas por WhatsApp** — en `/mis-logros`, botón "Compartir medallas" que genera un PNG con el avatar del chico + medallas ganadas + XP + un mensaje tipo *"Paulina ya domina sumas con reagrupamiento 🌟"*, listo para enviar al abuelo/abuela. Loop viral: el chico presume + el padre recibe reconocimiento por invertir en educación. Bajísimo costo (canvas + Web Share API), alto impacto en retención y referral orgánico. ~1h.
-- [ ] **`quality_score` 1-5 por ejercicio** — después de revisar los 122 ejercicios, agregar un campo en `exercises` para calificar cuáles son "excelentes" vs "aceptables". El engine los prioriza proporcionalmente. Te da control pedagógico fino sin re-escribir. ~30 min.
+- [ ] **`quality_score` 1-5 por ejercicio** — después de revisar los 212 ejercicios, agregar un campo en `exercises` para calificar cuáles son "excelentes" vs "aceptables". El engine los prioriza proporcionalmente. Te da control pedagógico fino sin re-escribir. ~30 min.
+- [ ] **"Mini-reporte semanal por WhatsApp"** — cada domingo el padre puede pedir un resumen de la semana (minutos totales, conceptos nuevos dominados, alertas activas). Sin push molestas: el padre pide cuando quiere. Alto engagement familiar + cero fricción técnica. ~2h.
 
 ### Producto
-- [ ] **Isla de las Ciencias** (Naturales + Sociales).
-- [ ] **Isla de la Ciudadanía** (derechos, convivencia, datos argentinos).
+- [ ] **Isla de la Ciudadanía** — ampliar con datos cívicos actualizados (hoy `social` cubre símbolos + convivencia + geo básica; falta procesos electorales, instituciones, derechos humanos).
 - [ ] Grade_6 + grade_7 (último año de primaria en sistema argentino de 7 años).
 - [ ] **Tutor IA "Ari"** (Claude/GPT con guardrails estrictos: no datos del chico, no sugerir hacer la tarea, solo ayudar a razonar).
 - [ ] Modo **offline completo** (todos los ejercicios cacheados en IndexedDB para viajes/sin internet).

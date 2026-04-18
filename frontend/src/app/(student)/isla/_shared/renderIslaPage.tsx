@@ -61,7 +61,7 @@ export async function renderIslaPage(opts: {
           data-testid="isla-back"
           className="inline-flex items-center h-12 px-4 rounded-2xl bg-white/80 text-tinku-ink font-medium border-2 border-tinku-ink/10 hover:bg-white"
         >
-          ← {strings.student.islaNumeros.back}
+          {strings.student.islaNumeros.back}
         </Link>
         <header className="text-center space-y-2">
           <div className="text-6xl" aria-hidden>{opts.emoji}</div>
