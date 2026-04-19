@@ -1,6 +1,5 @@
 // scripts/seed-drag-drop.mjs
-// Seed drag_drop exercises for classification and ordering
-// Idempotente: upsert by concept_id, exercise_type, difficulty
+// Seed drag_drop exercises for existing concepts
 // Usage: cd frontend && node scripts/seed-drag-drop.mjs
 
 import { createClient } from '@supabase/supabase-js';
@@ -17,7 +16,6 @@ const env = Object.fromEntries(
 }));
 const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
 
-// Helper: create drag_drop exercise
 const dragDrop = (items, zones, correctMapping, hint, explanation, difficulty = 'medium') => ({
   exercise_type: 'drag_drop',
   difficulty,
@@ -30,108 +28,40 @@ const dragDrop = (items, zones, correctMapping, hint, explanation, difficulty = 
   pedagogical_review_status: 'approved',
 });
 
-// Concept codes to seed
 const CONCEPTS = [
-  // MATH Grade 2-3: classify by even/odd
-  {
-    code: 'M2_PAR_IMPAR',
-    exercises: [
-      dragDrop(
-        ['2', '5', '8', '3', '9'],
-        ['Pares', 'Impares'],
-        { '2': 'Pares', '5': 'Impares', '8': 'Pares', '3': 'Impares', '9': 'Impares' },
-        'Los pares terminan en 0, 2, 4, 6, 8',
-        'Números pares terminan en 0,2,4,6,8. Impares en 1,3,5,7,9.',
-        'easy'
-      ),
-    ],
-  },
-  {
-    code: 'M3_GEOM_2D',
-    exercises: [
-      dragDrop(
-        ['Círculo', 'Cuadrado', 'Triángulo'],
-        ['Sin lados rectos', 'Tiene 4 lados'],
-        { 'Círculo': 'Sin lados rectos', 'Cuadrado': 'Tiene 4 lados', 'Triángulo': 'Tiene 4 lados' }, // Triángulo no tiene 4, pero se clasifica
-        'El círculo no tiene esquinas',
-        'Clasifica las figuras por cantidad de lados rectos.',
-        'medium'
-      ),
-    ],
-  },
-  // CIENCIAS: classify animals
-  {
-    code: 'C2_ANIMALES_AR',
-    exercises: [
-      dragDrop(
-        ['León', 'Vaca', 'Cocodrilo', 'Lana', 'Pez'],
-        ['Carnívoros', 'Herbívoros'],
-        { 'León': 'Carnívoros', 'Vaca': 'Herbívoros', 'Cocodrilo': 'Carnívoros', 'Lana': 'Herbívoros', 'Pez': 'Herbívoros' }, // Pez genérico
-        'Los carnívoros comen carne',
-        'Carnívoros = comen carne. Herbívoros = comen plantas.',
-        'easy'
-      ),
-    ],
-  },
-  {
-    code: 'C3_MATERIA',
-    exercises: [
-      dragDrop(
-        ['Agua', 'Madera', 'Aire', 'Plástico', 'Hielo'],
-        ['Sólidos', 'Líquidos'],
-        { 'Agua': 'Líquidos', 'Madera': 'Sólidos', 'Aire': 'Líquidos', 'Plástico': 'Sólidos', 'Hielo': 'Sólidos' },
-        'El aire es invisible pero ocupa espacio',
-        'Estados de la materia: sólido, líquido, gaseoso.',
-        'medium'
-      ),
-    ],
-  },
-  // LENGUA: classify words
-  {
-    code: 'L2_SINO_ANTO',
-    exercises: [
-      dragDrop(
-        ['Grande', 'Rápido', 'Claro', 'Chico', 'Lento'],
-        ['Sinónimos de "grande"', 'Antónimos de "grande"'],
-        { 'Grande': 'Sinónimos de "grande"', 'Rápido': 'Sinónimos de "grande"', 'Claro': 'Sinónimos de "grande"', 'Chico': 'Antónimos de "grande"', 'Lento': 'Antónimos de "grande"' },
-        'Grande = enorme = grande = Gigante',
-        'Sinónimos = mismo significado. Antónimos = significado opuesto.',
-        'medium'
-      ),
-    ],
-  },
+  // Math: even/odd (using M1 or M2 concepts)
+  { code: 'M1_NUM_100', exercises: [
+    dragDrop(['2', '5', '8', '3', '9'], ['Pares', 'Impares'], { '2': 'Pares', '5': 'Impares', '8': 'Pares', '3': 'Impares', '9': 'Impares' }, 'Los pares terminan en 0, 2, 4, 6, 8', 'Números pares terminan en 0,2,4,6,8. Impares en 1,3,5,7,9.', 'easy'),
+  ]},
+  // Ciencias: animals
+  { code: 'C_ANIMALES_AR', exercises: [
+    dragDrop(['León', 'Vaca', 'Conejo', 'Aguila', 'Pez'], ['Carnívoros', 'Herbívoros'], { 'León': 'Carnívoros', 'Vaca': 'Herbívoros', 'Conejo': 'Herbívoros', 'Aguila': 'Carnívoros', 'Pez': 'Herbívoros' }, 'Los carnívoros come carne', 'Carnívoros = comen carne. Herbívoros = comen plantas.', 'easy'),
+  ]},
+  // Ciencias: plantas
+  { code: 'C_PLANTAS', exercises: [
+    dragDrop(['Rosa', 'Musgo', 'Cactus', 'Helecho', 'Alga'], ['Con flor', 'Sin flor'], { 'Rosa': 'Con flor', 'Musgo': 'Sin flor', 'Cactus': 'Con flor', 'Helecho': 'Sin flor', 'Alga': 'Sin flor' }, 'Las plantas con flor dan semillas', 'Algunas plantas tienen flor, otras no.', 'medium'),
+  ]},
 ];
 
 async function main() {
   console.log('🎯 Seed drag_drop exercises...\n');
 
+  let totalInserted = 0;
   for (const cfg of CONCEPTS) {
-    // Find concept by code
-    const { data: concept, error: err } = await supabase
-      .from('concepts')
-      .select('id')
-      .eq('code', cfg.code)
-      .single();
+    const { data: concept } = await supabase.from('concepts').select('id').eq('code', cfg.code).single();
+    if (!concept) { console.log(`⚠️  No encontrado: ${cfg.code}`); continue; }
 
-    if (err || !concept) {
-      console.log(`⚠️  Concepto no encontrado: ${cfg.code} — saltando`);
-      continue;
-    }
+    const exercises = cfg.exercises.map((e, i) => ({ 
+      ...e, 
+      concept_id: concept.id,
+      title_es: `${e.title_es} #${i+1}`
+    }));
 
-    // Insert exercises
-    const exercises = cfg.exercises.map(e => ({ ...e, concept_id: concept.id }));
-    const { error: insertErr } = await supabase
-      .from('exercises')
-      .upsert(exercises, { onConflict: 'concept_id,exercise_type,difficulty' });
-
-    if (insertErr) {
-      console.log(`❌ ${cfg.code}:`, insertErr.message);
-    } else {
-      console.log(`✅ ${cfg.code}: ${exercises.length} ejercicios`);
-    }
+    const { error } = await supabase.from('exercises').insert(exercises);
+    if (error) console.log(`❌ ${cfg.code}:`, error.message);
+    else { console.log(`✅ ${cfg.code}: ${exercises.length} ejercicios`); totalInserted += exercises.length; }
   }
-
-  console.log('\n🎉 Listo!');
+  console.log(`\n🎉 Total insertados: ${totalInserted}`);
 }
 
 main().catch(console.error);

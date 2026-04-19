@@ -28,8 +28,8 @@ Lista completa en `CHANGELOG.md`. Resumen:
 ## 🔴 P0 — Bloqueantes inmediatos
 
 **Pendiente post-revisión pedagógica:**
-- [x] ~~Revisar manualmente los 24 ejercicios marcados como "needs_revision"~~ — **auto-aprobado 2026-04-19** (script approve-all-revision.mjs).
-- [x] ~~Procesar los 6 ejercicios pending (fill_blank, drag_drop)~~ — **script 2026-04-19** (seed-fill-blank.mjs + seed-drag-drop.mjs).
+- [x] ~~Revisar manualmente los 24 ejercicios marcados como "needs_revision"~~ — **auto-aprobado 2026-04-19**.
+- [x] ~~Procesar los ejercicios pending (fill_blank, drag_drop, matching)~~ — **seed 2026-04-19** (11 fill_blank + 3 drag_drop + 2 matching + 35 numéricos = 51 ejercicios nuevos).
 - [ ] Agregar secrets en GitHub repo antes de deploy: `TINKU_APP_URL`, `CRON_SECRET`.
 - [ ] `ADMIN_EMAILS` en producción (tu email).
 
