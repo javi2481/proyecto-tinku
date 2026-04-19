@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { initiateCheckout } from '@/lib/payment/mercadopago';
+import { createSubscriptionAction } from '@/lib/payment/actions';
 
 export function PremiumBanner() {
   const router = useRouter();
@@ -12,18 +12,18 @@ export function PremiumBanner() {
   const handleUpgrade = async () => {
     setLoading(true);
     try {
-      const url = await initiateCheckout();
-      if (url) {
-        window.location.href = url;
+      const result = await createSubscriptionAction();
+      if ('url' in result) {
+        window.location.href = result.url;
       } else {
         // Fallback: redirect to premium page
         startTransition(() => {
           router.push('/premium');
         });
       }
-    } catch (error) {
+    } catch (e) {
       // eslint-disable-next-line no-console
-      console.error('Checkout error:', error);
+      console.error('Checkout error:', e);
       setLoading(false);
     }
   };
