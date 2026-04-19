@@ -10,6 +10,7 @@ import { CelebrationModal, type CelebrationPayload } from '@/components/celebrat
 import { strings } from '@/content/strings/es-AR';
 import { FillBlankExercise } from './FillBlankExercise';
 import { DragDropExercise } from './DragDropExercise';
+import { MatchingExercise } from './MatchingExercise';
 import { useAudio } from '@/lib/hooks';
 
 interface Props {
@@ -27,13 +28,13 @@ type Feedback = {
   newBadges: Array<{ code: string; name_es: string; icon_url: string }>;
 } | null;
 
-export function PracticeClient({
+export const PracticeClient = ({
   conceptId,
   conceptName,
   sessionId,
   initialExercise,
   initialPKnown,
-}: Props) {
+}: Props) => {
   const router = useRouter();
   const [exercise, setExercise] = useState<Exercise>(initialExercise);
   const [pKnown, setPKnown] = useState(initialPKnown);
@@ -64,6 +65,7 @@ export function PracticeClient({
   const isNumeric = exercise.exercise_type === 'numeric_input';
   const isFillBlank = exercise.exercise_type === 'fill_blank';
   const isDragDrop = exercise.exercise_type === 'drag_drop';
+  const isMatching = exercise.exercise_type === 'matching';
   const numericPlaceholder =
     (exercise.content as { placeholder?: string }).placeholder ?? '0';
 
@@ -74,25 +76,40 @@ export function PracticeClient({
     if (isNumeric && !/^-?\d+$/.test(selected)) return;
     if (isDragDrop) {
       const zonesCount = (exercise.content as { zones?: string[] }).zones?.length || 0;
-      const parsed = selected ? JSON.parse(selected) : {};
+      let parsed = {};
+      try { parsed = selected ? JSON.parse(selected) : {}; } catch { parsed = {}; }
       if (Object.keys(parsed).length < zonesCount) return;
+    }
+    if (isMatching) {
+      const leftCount = (exercise.content as { leftItems?: string[] }).leftItems?.length || 0;
+      let parsed = {};
+      try { parsed = selected ? JSON.parse(selected) : {}; } catch { parsed = {}; }
+      if (Object.keys(parsed).length < leftCount) return;
     }
     const timeSpent = Math.max(1, Math.round((Date.now() - startedAtRef.current) / 1000));
     startTransition(async () => {
-      const res = await submitAttemptAction({
-        sessionId,
-        exerciseId: exercise.id,
-        answer: { value: isFillBlank ? selected.trim().toLowerCase() : selected },
-        timeSpentSeconds: timeSpent,
-        hintsUsed,
-      });
-      setFeedback({
-        correct: res.correct,
-        xp: res.xpEarned,
-        justMastered: res.justMastered,
-        newBadges: res.newBadges,
-      });
-      setPKnown(res.pKnownNew);
+      // Para matching/drag_drop, enviar el objeto parsed; para fill_blank, string lowercased; para el resto, string
+      let answerValue: string | Record<string, unknown> = selected;
+      if (isMatching || isDragDrop) {
+        try { answerValue = selected ? JSON.parse(selected) : {}; } catch { answerValue = {}; }
+      } else if (isFillBlank) {
+        answerValue = selected.trim().toLowerCase();
+      }
+      try {
+        const res = await submitAttemptAction({
+          sessionId,
+          exerciseId: exercise.id,
+          answer: { value: answerValue },
+          timeSpentSeconds: timeSpent,
+          hintsUsed,
+        });
+        setFeedback({
+          correct: res.correct,
+          xp: res.xpEarned,
+          justMastered: res.justMastered,
+          newBadges: res.newBadges,
+        });
+        setPKnown(res.pKnownNew);
 
       // Audio feedback
       if (res.correct) {
@@ -133,14 +150,18 @@ export function PracticeClient({
 
   const onNext = () => {
     startTransition(async () => {
-      const next = await getNextExerciseAction(conceptId, exercise.id);
-      if (next.kind === 'exercise') {
-        setExercise(next.exercise);
-        setPKnown(next.pKnown);
-      } else if (next.kind === 'mastered') {
-        setMastered(true);
-      } else {
-        setMastered(true);
+      try {
+        const next = await getNextExerciseAction(conceptId, exercise.id);
+        if (next.kind === 'exercise') {
+          setExercise(next.exercise);
+          setPKnown(next.pKnown);
+        } else if (next.kind === 'mastered') {
+          setMastered(true);
+        } else {
+          setMastered(true);
+        }
+} catch (err) {
+        // Silently fail - user can retry
       }
     });
   };
@@ -267,6 +288,18 @@ export function PracticeClient({
             <div data-testid="exercise-drag-drop" className="w-full">
               <DragDropExercise
                 content={exercise.content as { items: string[]; zones: string[] }}
+                value={selected ?? ''}
+                onChange={(val) => {
+                  if (feedback || isPending) return;
+                  setSelected(val);
+                }}
+                disabled={Boolean(feedback) || isPending}
+              />
+            </div>
+          ) : isMatching ? (
+            <div data-testid="exercise-matching" className="w-full">
+              <MatchingExercise
+                content={exercise.content as { leftItems: string[]; rightItems: string[] }}
                 value={selected ?? ''}
                 onChange={(val) => {
                   if (feedback || isPending) return;
@@ -402,4 +435,4 @@ export function PracticeClient({
       )}
     </div>
   );
-}
+};

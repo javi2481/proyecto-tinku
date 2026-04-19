@@ -214,10 +214,27 @@ export async function submitAttemptAction(input: SubmitAttemptInput): Promise<Su
   const correctValue = (exercise.correct_answer as { value: unknown }).value;
 
   const givenValue = (input.answer as { value?: unknown })?.value ?? input.answer;
-  const isCorrect =
-    typeof correctValue === 'string' && typeof givenValue === 'string'
-      ? correctValue.trim() === givenValue.trim()
-      : correctValue === givenValue;
+
+  // Validación especial para matching: comparar objetos { left: right }
+  let isCorrect: boolean;
+  if (typeof correctValue === 'object' && typeof givenValue === 'object' && correctValue !== null && givenValue !== null) {
+    // Matching: ambos son objetos { "2×3": "6", ... }
+    const correctPairs = correctValue as Record<string, string>;
+    const givenPairs = givenValue as Record<string, string>;
+    const correctKeys = Object.keys(correctPairs);
+    const givenKeys = Object.keys(givenPairs);
+    // Mismo número de pares
+    if (correctKeys.length !== givenKeys.length) {
+      isCorrect = false;
+    } else {
+      // Todos los pares deben coincidir exactamente
+      isCorrect = correctKeys.every(k => correctPairs[k] === givenPairs[k]);
+    }
+  } else if (typeof correctValue === 'string' && typeof givenValue === 'string') {
+    isCorrect = correctValue.trim() === givenValue.trim();
+  } else {
+    isCorrect = correctValue === givenValue;
+  }
 
   const attemptNumber = ((previousAttempts?.[0]?.attempt_number as number | undefined) ?? 0) + 1;
 

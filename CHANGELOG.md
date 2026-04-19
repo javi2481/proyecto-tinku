@@ -31,6 +31,28 @@ Todo lo que se construyó, en orden cronológico. Formato [Keep a Changelog](htt
 
 ---
 
+## [0.14.0] — 2026-04-19 · Tipos de ejercicio + OpenRouter
+
+### Added — Tipos de ejercicio (P2)
+- **`matching`:** Nuevo componente MatchingExercise.tsx - emparejar columnas A↔B, validación de pares exactos. Scripts de seed.
+- **`fill_blank`:** Scripts de seed para fill_blank (10 ejercicios para Lengua, Ciencias, Argentina).
+- **`drag_drop`:** Scripts de seed para drag_drop (5 ejercicios de clasificación).
+- **Motor adaptativo actualizado:** Validación mejorada para objetos en matching/drag_drop (compara {key:value} en lugar de strings).
+
+### Added — Contenido generado con IA
+- **40 ejercicios de multiplicación** generados via OpenRouter (Claude Haiku) - tablas 2-10, difficulty easy/medium/hard.
+- **Auto-revisión:** Script para aprobar en batch los 24 ejercicios "needs_revision".
+
+### Files
+- `frontend/src/components/practice/MatchingExercise.tsx` (nuevo)
+- `frontend/scripts/seed-fill-blank.mjs` (nuevo)
+- `frontend/scripts/seed-drag-drop.mjs` (nuevo)
+- `frontend/scripts/seed-openrouter-mult.mjs` (nuevo)
+- `frontend/scripts/approve-all-revision.mjs` (nuevo)
+- `frontend/scripts/seed-matching.mjs` (nuevo)
+
+---
+
 ## [Unreleased]
 
 ### Added

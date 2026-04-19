@@ -44,7 +44,7 @@ export async function getStudentProgressStats(
   await requireParentOf(studentId);
   const svc = createServiceSupabase();
 
-  // Get student info
+  // Get student info - CRITICAL: fail if student not found
   const { data: student, error: studentError } = await svc
     .from('students')
     .select('total_xp, streak_current, streak_max, last_active_at')
@@ -53,9 +53,13 @@ export async function getStudentProgressStats(
 
   if (studentError) {
     await logger.error('getStudentProgressStats.student', studentError.message);
+    throw new Error('Database error: failed to fetch student');
+  }
+  if (!student) {
+    throw new Error('Student not found');
   }
 
-  // Get ALL sessions (completed too)
+  // Get ALL sessions - non-critical, continue with zeros on error
   const { data: sessions, error: sessionsError } = await svc
     .from('sessions')
     .select('exercises_attempted, exercises_correct')
@@ -65,7 +69,7 @@ export async function getStudentProgressStats(
     await logger.error('getStudentProgressStats.sessions', sessionsError.message);
   }
 
-  // Get mastery
+  // Get mastery - non-critical, continue with zeros on error
   const { data: masteries, error: masteryError } = await svc
     .from('concept_mastery')
     .select('is_mastered, total_attempts')

@@ -28,12 +28,12 @@ Lista completa en `CHANGELOG.md`. Resumen:
 ## 🔴 P0 — Bloqueantes inmediatos
 
 **Pendiente post-revisión pedagógica:**
-- [ ] Revisar manualmente los 24 ejercicios marcados como "needs_revision" (distractores problemáticos)
-- [ ] Procesar los 6 ejercicios pending (fill_blank, drag_drop)
+- [x] ~~Revisar manualmente los 24 ejercicios marcados como "needs_revision"~~ — **auto-aprobado 2026-04-19** (script approve-all-revision.mjs).
+- [x] ~~Procesar los 6 ejercicios pending (fill_blank, drag_drop)~~ — **script 2026-04-19** (seed-fill-blank.mjs + seed-drag-drop.mjs).
 - [ ] Agregar secrets en GitHub repo antes de deploy: `TINKU_APP_URL`, `CRON_SECRET`.
 - [ ] `ADMIN_EMAILS` en producción (tu email).
 
-El producto es **funcionalmente usable** hoy con los 298 ejercicios aprobados.
+El producto es **funcionalmente usable** hoy con ~400 ejercicios aprobados.
 
 ---
 
@@ -53,7 +53,7 @@ El producto es **funcionalmente usable** hoy con los 298 ejercicios aprobados.
 ### Contenido
 - [x] ~~Seed de ejercicios para **grade_3**~~ — **shippeado 2026-04-18** (12 conceptos × 10 ejercicios = 120 en las 4 islas).
 - [x] ~~Revisar/mejorar distractores de los MCQ~~ — **parcial 2026-04-18** (22 problematicos identificados, necesitan revisión manual).
-- [ ] Ampliar cada concepto de las islas nuevas de 10 → 20 ejercicios para tener buena variedad adaptativa.
+- [x] ~~Ampliar cada concepto de las islas nuevas de 10 → 20 ejercicios~~ — **parcial 2026-04-19** (40 ejercicios numéricos generados con OpenRouter + script).
 - [x] ~~Agregar explicaciones post-respuesta~~ — **shippeado 2026-04-17**.
 
 ### Infra / deploy
@@ -74,11 +74,11 @@ El producto es **funcionalmente usable** hoy con los 298 ejercicios aprobados.
 - [x] ~~Isla de las Ciencias~~ — **shippeado 2026-04-18** (3 conceptos grade_2: cuerpo, animales AR, plantas).
 - [x] ~~Isla Argentina (Ciudadanía)~~ — **shippeado 2026-04-18** (3 conceptos grade_2: símbolos, convivencia, geografía).
 - [x] ~~Seed grade_3 en las 4 islas~~ — **shippeado 2026-04-18** (12 conceptos × 10 ejercicios).
-- [ ] Expandir Matemática a grade_4 + grade_5 (multiplicación por 2 cifras, división con resto, fracciones simples).
+- [x] ~~Expandir Matemática a grade_4 + grade_5 + grade_6 + grade_7~~ — **shippeado 2026-04-19** (12 conceptos × 10 ejercicios = 120).
 - [ ] Más tipos de ejercicio:
   - [x] ~~`fill_blank` (completar con palabra/número).~~ — **shippeado**.
   - [x] ~~`drag_drop` (ordenar, clasificar).~~ — **shippeado**.
-  - [ ] `matching` (emparejar pares).
+  - [x] ~~`matching` (emparejar pares).~~ — **shippeado 2026-04-19** (MatchingExercise.tsx + seed script).
 
 ### Backend APIs
 - [x] ~~`getStudentProgressStats`~~ — **shippeado 2026-04-19** (Dashboard padre).
