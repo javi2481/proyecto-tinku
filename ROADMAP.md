@@ -63,7 +63,7 @@ El producto es **funcionalmente usable** hoy con los 298 ejercicios aprobados.
 
 ### Compliance
 - [x] ~~Publicar `/privacidad` y `/terminos` como páginas públicas~~ — **shippeado 2026-04-18** (v1 rioplatense, cumple Ley 26.061 + 25.326).
-- [ ] Export de datos del alumno ("Descargar mis datos") en formato JSON.
+- [x] ~~Export de datos del alumno ("Descargar mis datos")~~ — **shippeado 2026-04-19** (`exportStudentData` server action + `/settings/export`).
 
 ---
 
@@ -80,8 +80,18 @@ El producto es **funcionalmente usable** hoy con los 298 ejercicios aprobados.
   - [x] ~~`drag_drop` (ordenar, clasificar).~~ — **shippeado**.
   - [ ] `matching` (emparejar pares).
 
+### Backend APIs
+- [x] ~~`getStudentProgressStats`~~ — **shippeado 2026-04-19** (Dashboard padre).
+- [x] ~~`getDailyStats`~~ — **shippeado 2026-04-19** (stats del día).
+- [x] ~~`exportStudentData`~~ — **shippeado 2026-04-19** (GDPR export).
+- [x] ~~`GET /api/exercises`~~ — **shippeado 2026-04-19** (API con filtros).
+
+### UX
+- [x] ~~Dashboard Charts~~ — **shippeado 2026-04-18** (Recharts en dashboard padre).
+- [x] ~~Transcript Audio~~ — **shippeado 2026-04-18** (sounds en PracticeClient: correct/wrong/XP/badge).
+
 ### Monetización
-- [ ] **MercadoPago** para suscripción Premium (AR$ mensual + anual con descuento).
+- [ ] **MercadoPago** infra lista, webhooks configurados.
 - [ ] Plan Premium: hasta 5 hijos + acceso a todas las islas + reportes avanzados para el padre.
 - [ ] Prueba gratuita 14 días sin tarjeta.
 

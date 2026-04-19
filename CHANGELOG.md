@@ -4,6 +4,33 @@ Todo lo que se construyó, en orden cronológico. Formato [Keep a Changelog](htt
 
 ---
 
+## [0.13.0] — 2026-04-19 · Backend APIs + GDPR
+
+### Added — Backend APIs (nuevo)
+- **`getStudentProgressStats`** server action: XP total, streak, mastery count, exercises attempted para dashboard padre.
+- **`getDailyStats`** server action: stats del día para dashboard.
+- **`exportStudentData`** server action: export completo de datos del hijo (sessions, attempts, badges, mastery) para GDPR compliance.
+- **`GET /api/exercises`**: endpoint REST con filtros (concept_id, difficulty, status).
+- Tipos en `src/types/api.ts`.
+
+### Added — UX (nuevo)
+- Dashboard Charts con Recharts (gráfico XP última semana + streak semanal).
+- Transcript Audio: sonidos para correct/wrong/XPgain/badge en PracticeClient.
+
+### Files
+- `frontend/src/types/api.ts` (nuevo)
+- `frontend/src/lib/progress/actions.ts` (nuevo)
+- `frontend/src/app/api/exercises/route.ts` (nuevo)
+- `frontend/src/app/(parent)/dashboard/DashboardCharts.tsx` (ya existía)
+- `frontend/src/lib/hooks/useAudio.ts` (ya existía)
+- Sonidos en `public/sounds/` (ya existentes)
+
+### Testing
+- ✅ TypeScript `tsc --noEmit` limpio.
+- ✅ GitHub push completado.
+
+---
+
 ## [Unreleased]
 
 ### Added
