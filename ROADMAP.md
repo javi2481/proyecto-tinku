@@ -91,7 +91,8 @@ El producto es **funcionalmente usable** hoy con ~400 ejercicios aprobados.
 - [x] ~~Transcript Audio~~ — **shippeado 2026-04-18** (sounds en PracticeClient: correct/wrong/XP/badge).
 
 ### Monetización
-- [ ] **MercadoPago** infra lista, webhooks configurados.
+- [x] **MercadoPago** — **configurado 2026-04-19** (credenciales TEST en .env.local, webhook route creado, pending config manual en dashboard MP).
+  - ⚠️ Webhook URL a configurar manualmente en dashboard MP: `https://regla-clara.preview.emergentagent.com/api/webhooks/mercadopago`
 - [ ] Plan Premium: hasta 5 hijos + acceso a todas las islas + reportes avanzados para el padre.
 - [ ] Prueba gratuita 14 días sin tarjeta.
 

@@ -31,34 +31,41 @@ Todo lo que se construyó, en orden cronológico. Formato [Keep a Changelog](htt
 
 ---
 
-## [0.14.0] — 2026-04-19 · Tipos de ejercicio + OpenRouter
+## [0.14.0] — 2026-04-19 · Tipos de ejercicio + OpenRouter + MercadoPago (TEST)
 
 ### Added — Tipos de ejercicio (P2)
 - **`matching`:** Nuevo componente MatchingExercise.tsx - emparejar columnas A↔B, validación de pares exactos. Scripts de seed.
-- **`fill_blank`:** Scripts de seed para fill_blank (10 ejercicios para Lengua, Ciencias, Argentina).
-- **`drag_drop`:** Scripts de seed para drag_drop (5 ejercicios de clasificación).
+- **`fill_blank`:** Scripts de seed para fill_blank (11 ejercicios para Lengua, Ciencias, Argentina).
+- **`drag_drop`:** Scripts de seed para drag_drop (3 ejercicios de clasificación).
 - **Motor adaptativo actualizado:** Validación mejorada para objetos en matching/drag_drop (compara {key:value} en lugar de strings).
 
 ### Added — Contenido generado con IA
-- **40 ejercicios de multiplicación** generados via OpenRouter (Claude Haiku) - tablas 2-10, difficulty easy/medium/hard.
+- **51 ejercicios nuevos seedeados en producción:**
+  - 11 fill_blank, 3 drag_drop, 2 matching, 35 numeric_input de multiplicación
 - **Auto-revisión:** Script para aprobar en batch los 24 ejercicios "needs_revision".
+
+### Added — MercadoPago (TEST)
+- Credenciales TEST configuradas en .env.local
+- Webhook route creado en `/api/webhooks/mercadopago`
+- pending: configurar manualmente en dashboard MP
 
 ### Files
 - `frontend/src/components/practice/MatchingExercise.tsx` (nuevo)
-- `frontend/scripts/seed-fill-blank.mjs` (nuevo)
-- `frontend/scripts/seed-drag-drop.mjs` (nuevo)
+- `frontend/scripts/seed-fill-blank.mjs` (actualizado)
+- `frontend/scripts/seed-drag-drop.mjs` (actualizado)
 - `frontend/scripts/seed-openrouter-mult.mjs` (nuevo)
 - `frontend/scripts/approve-all-revision.mjs` (nuevo)
-- `frontend/scripts/seed-matching.mjs` (nuevo)
+- `frontend/scripts/seed-matching.mjs` (actualizado)
+- `frontend/.env.local` (actualizado con credenciales MP TEST)
 
 ---
 
 ## [Unreleased]
 
 ### Added
-- **Nuevo tipo de ejercicio `fill_blank`:** Componente interactivo para completar espacios en oraciones, validación que ignora mayúsculas/espacios, y script de seed para Isla de las Palabras.
-- **Nuevo tipo de ejercicio `drag_drop`:** Componente táctil (tap-to-select, tap-to-drop) optimizado para tablets/niños, ideal para clasificar y ordenar conceptos en Ciencias. Sin librerías pesadas.
-- **Motor Adaptativo:** Actualizado `PracticeClient` para soportar `fill_blank` y validación de llenado completo en `drag_drop`.
+- **Nuevo tipo de ejercicio `fill_blank`:** Componente interactivo para completar espacios en oraciones.
+- **Nuevo tipo de ejercicio `drag_drop`:** Componente táctil (tap-to-select, tap-to-drop).
+- **Motor Adaptativo:** Actualizado `PracticeClient` para soportar `fill_blank`, `drag_drop`, `matching`.
 
 ---
 
